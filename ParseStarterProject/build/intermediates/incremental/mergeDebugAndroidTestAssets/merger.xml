@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/chris/Documents/github/BarberApp/ParseStarterProject/src/androidTest/assets"/><source path="/Users/chris/Documents/github/BarberApp/ParseStarterProject/build/generated/assets/shaders/androidTest/debug"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/androidTest/assets"/><source path="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/generated/assets/shaders/androidTest/debug"/></dataSet></merger>

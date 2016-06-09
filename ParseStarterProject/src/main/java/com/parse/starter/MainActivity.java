@@ -50,10 +50,13 @@ public class MainActivity extends AppCompatActivity {
                     ParseUser.logInInBackground(userNameEditText.getText().toString(), userPasswordEditText.getText().toString(), new LogInCallback() {
                         @Override
                         public void done(ParseUser user, ParseException e) {
-                            if (e != null){
+                            if (user != null){
                                 //User Succesfully Logged in
                                 Log.i("Parse Log In", "Login  was sucessfull" );
-                                if(ParseUser.getCurrentUser().getString("barberOrUser").equals("barber")){
+                                Log.i("Parse Log In","Users status" + " " + user.getUsername() + " "
+
+                                + user.getString("barberOrUser"));
+                                if(user.getString("barberOrUser").equals("barber")){
 
                                     Intent barberActivityIntent = new Intent(getApplicationContext(),BarberProfileActivity.class);
                                     startActivity(barberActivityIntent);
@@ -119,6 +122,17 @@ public class MainActivity extends AppCompatActivity {
     loginButton = (Button) findViewById(R.id.loginRegisterButton);
     signUpTextView = (TextView) findViewById(R.id.signUpView);
     //Sets up the login button listener
+
+
+       ParseUser.logOutInBackground(new LogOutCallback() {
+           @Override
+           public void done(ParseException e) {
+               if (e != null){
+                   Log.i("Initial Log out", "Log out was succesful" + " " );
+               }
+           }
+       });
+
     loginButtonListener();
     signUpButtonListener();
 

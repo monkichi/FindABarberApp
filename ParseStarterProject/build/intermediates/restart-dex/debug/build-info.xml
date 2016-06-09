@@ -4,24 +4,24 @@
     api-level="16"
     density="xhdpi"
     format="7"
-    timestamp="6892429002870"
+    timestamp="2013226817650"
     token="-8408657460099452584" >
 
     <task
         name="javac"
-        duration="1674" />
+        duration="163" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="440" />
+        duration="8" />
     <task
         name="verifier"
-        duration="52" />
+        duration="1" />
 
     <artifact
-        location="/Users/chris/Documents/github/BarberApp/ParseStarterProject/build/outputs/apk/ParseStarterProject-debug.apk"
+        location="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/outputs/apk/ParseStarterProject-debug.apk"
         type="MAIN" />
 
     <build timestamp="6892429002870" >

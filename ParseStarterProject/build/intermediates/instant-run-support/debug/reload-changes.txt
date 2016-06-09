@@ -1,0 +1,2 @@
+CHANGED,/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/com/android/tools/fd/runtime/AppPatchesLoaderImpl.class
+CHANGED,/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/com/parse/starter/MainActivity$1$1$override.class
