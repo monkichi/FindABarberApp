@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/chris/Documents/github/Parse-Starter-Project-1.13.0/ParseStarterProject/build/intermediates/res/merged/debug/drawable-ldpi-v4/common_ic_googleplayservices.png",
+        "source": "/Users/chris/Documents/github/Parse-Starter-Project-1.13.0/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable-ldpi-v4/common_ic_googleplayservices.png"
+    },
+    {
+        "merged": "/Users/chris/Documents/github/BarberApp/ParseStarterProject/build/intermediates/res/merged/debug/drawable-ldpi-v4/common_ic_googleplayservices.png",
+        "source": "/Users/chris/Documents/github/BarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable-ldpi-v4/common_ic_googleplayservices.png"
+    }
+]
