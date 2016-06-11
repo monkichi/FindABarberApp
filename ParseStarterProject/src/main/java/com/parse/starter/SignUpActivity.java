@@ -9,9 +9,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +39,7 @@ public class SignUpActivity extends AppCompatActivity {
     Switch barberOrUserSwitch;
     TextView userOrBarberTextView;
     String barberOrUser = "barber";
+    private RelativeLayout relativeLayout;
 
 
 
@@ -51,6 +54,15 @@ public class SignUpActivity extends AppCompatActivity {
         userFullNameEditText = (EditText) findViewById(R.id.signUpNameEditText) ;
         barberOrUserSwitch = (Switch) findViewById(R.id.barberOrUserSwitch);
         userOrBarberTextView = (TextView) findViewById(R.id.barberOrUserView);
+        relativeLayout = (RelativeLayout) findViewById(R.id.signRelativeLayout);
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+
+            }
+        });
         userOrBarberTextView.setText(barberOrUser);
 
         signUpButton =(Button) findViewById(R.id.signUpButton);

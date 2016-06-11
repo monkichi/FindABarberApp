@@ -10,6 +10,7 @@ package com.parse.starter;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,8 +18,10 @@ import android.util.StringBuilderPrinter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,14 +40,14 @@ public class MainActivity extends AppCompatActivity {
   Button  loginButton;
   TextView signUpTextView;
     ParseUser currentUser;
+    RelativeLayout relativeLayout;
 
     public void loginButtonListener(){
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("Login Test","Username:"+ " " +String.valueOf(userNameEditText.getText()));
-                Log.i("Login Test","Passoword:"+ " " + String.valueOf(userPasswordEditText.getText()));
 
+                Log.i("Button test", "Login button was pressed");
                 //Only log in users if all the editText are NOT empty
                 if(String.valueOf(userNameEditText.getText()).length() > 0 && String.valueOf(userPasswordEditText.getText()).length() >0 ){
                     ParseUser.logInInBackground(userNameEditText.getText().toString(), userPasswordEditText.getText().toString(), new LogInCallback() {
@@ -58,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                                 + user.getString("barberOrUser"));
                                 if(user.getString("barberOrUser").equals("barber")){
 
-                                    Intent barberActivityIntent = new Intent(getApplicationContext(),BarberProfileActivity.class);
+                                    Intent barberActivityIntent = new Intent(getApplicationContext(),BarberActivity.class);
                                     startActivity(barberActivityIntent);
                                 }
                                 else{
@@ -67,8 +70,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                             else{
-                                //Sign up was not succesful
-
+                                //Login was not succesful
                                 Toast.makeText(getApplicationContext(), e.getMessage().substring(e.getMessage().indexOf(" ")) ,Toast.LENGTH_LONG).show();
 
                             }
@@ -82,8 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                     else if (userPasswordEditText.getText().toString().length() == 0){
-                        Toast.makeText(getApplicationContext(), "Passoword cannot be empty", Toast.LENGTH_LONG).show();
-                        // userPasswordEditText.getText().clear();
+                        Toast.makeText(getApplicationContext(), "Password cannot be empty", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -116,22 +117,34 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
+//            relativeLayout = (RelativeLayout) findViewById(R.id.mainRelativeLayout);
+//            relativeLayout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+//                }
+//            });
     userNameEditText = (EditText) findViewById(R.id.usernameEditText);
     userPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
     loginButton = (Button) findViewById(R.id.loginRegisterButton);
-    signUpTextView = (TextView) findViewById(R.id.signUpView);
-    //Sets up the login button listener
+            signUpTextView = (TextView) findViewById(R.id.signUpView);
+
+            if (ParseUser.getCurrentUser() ==  null){
+
+            }
+            else{
+                ParseUser.getCurrentUser().logOutInBackground(new LogOutCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null){
+                            Log.i("Initial Log out", "Log out was succesful" + " " );
+                        }
+                    }
+                });
+            }
 
 
-       ParseUser.logOutInBackground(new LogOutCallback() {
-           @Override
-           public void done(ParseException e) {
-               if (e != null){
-                   Log.i("Initial Log out", "Log out was succesful" + " " );
-               }
-           }
-       });
 
     loginButtonListener();
     signUpButtonListener();

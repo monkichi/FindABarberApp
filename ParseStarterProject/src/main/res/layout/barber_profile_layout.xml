@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:id="@+id/barberImageView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/common_ic_googleplayservices" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/textView"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/barberImageView"
+            android:layout_toEndOf="@+id/barberImageView" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="113dp"
+            android:layout_below="@+id/barberImageView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/relativeLayout">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/barberImageView1"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:src="@android:drawable/sym_def_app_icon" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/barberImageView2"
+                android:src="@android:drawable/sym_def_app_icon"
+                android:layout_alignParentTop="true"
+                android:layout_alignLeft="@+id/barberImageView5"
+                android:layout_alignStart="@+id/barberImageView5" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/barberImageView3"
+                android:src="@android:drawable/sym_def_app_icon"
+                android:layout_alignLeft="@+id/barberImageView6"
+                android:layout_alignStart="@+id/barberImageView6"
+                android:layout_alignParentTop="true"
+                android:layout_alignBottom="@+id/barberImageView2" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/barberImageView4"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:src="@android:drawable/sym_def_app_icon" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/barberImageView5"
+                android:layout_alignBottom="@+id/barberImageView4"
+                android:layout_centerHorizontal="true"
+                android:src="@android:drawable/sym_def_app_icon" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/barberImageView6"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:src="@android:drawable/sym_def_app_icon" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/aboutBarberEditText"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+</LinearLayout>
