@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -36,7 +38,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogOutCallback;
+import com.parse.ParseACL;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -47,6 +51,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,7 +73,7 @@ import java.util.concurrent.ExecutionException;
  * activity
  */
 public class BarberActivity extends AppCompatActivity implements View.OnClickListener {
-
+    int REQUEST_PHOTO_ALBUM= 1;
     ImageView barberProfileImage;
     ImageView  barberImageView1,barberImageView2,barberImageView3,barberImageView4,barberImageView5,barberImageView6;
     EditText barberAddressEditText;
@@ -98,6 +103,42 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
     private String mWorkPhoto6Path= "";
     private String photoPathReturned= "";
     private String absolutePath="";
+    private ParseObject barberObject;
+    private ParseObject currentUserImageObject;
+
+    //DownLoadBitmap
+
+    public void getCurrentBarber() {
+
+    ParseQuery<ParseObject> query = ParseQuery.getQuery("Barbers");
+    query.whereEqualTo("barberUserId",currentUser.getObjectId());
+    query.findInBackground(new FindCallback<ParseObject>() {
+        @Override
+        public void done(List<ParseObject> objects, ParseException e) {
+            if (e == null) {
+                if(objects != null && objects.size() > 0){
+                    barberObject = objects.get(0);
+                    Log.i("BarberQuery","Query was succesful with object id "+ currentUser.getObjectId() +" object " + barberObject.get("barberUserId"));
+                }
+            }//End of if
+            else {
+                // something went wrong
+                Log.i("BarberQuery","Query not succesful "+ e.getMessage() );
+            }
+        }
+    });
+}
+    public byte[] getImageViewByteArray(BitmapDrawable prof){
+        // Convert it to Bitmap
+        Bitmap profileImagBitmap = prof.getBitmap();
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        // Compress image to lower quality scale 1 - 100
+        profileImagBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] image = stream.toByteArray();
+        return image;
+    }
+
 
 
     @Override
@@ -105,7 +146,6 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.barber_layout);
         Toolbar actionToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-
         setSupportActionBar(actionToolbar);
         relativeLayout = (RelativeLayout) findViewById(R.id.barberRelativeLayout);
         relativeLayout.setOnClickListener(new View.OnClickListener() {
@@ -117,8 +157,10 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
             }
         });
+        currentUser = ParseUser.getCurrentUser();
+        getCurrentBarber();
 
-         barberProfileImage =(ImageView) findViewById(R.id.barberProfileImage);
+        barberProfileImage =(ImageView) findViewById(R.id.barberProfileImage);
         if (barberProfileImage != null) {
             barberProfileImage.setOnClickListener(this);
         }
@@ -146,6 +188,68 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
         if (barberImageView6 != null) {
             barberImageView6.setOnClickListener(this);
         }
+        ParseQuery<ParseObject> imagesDownLoadQuery = ParseQuery.getQuery("Images");
+        imagesDownLoadQuery.whereEqualTo("UserObjectId", currentUser.getObjectId());
+        imagesDownLoadQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if(e==null){
+                    currentUserImageObject = object;
+                    Log.i("ImagesQuerySuccess","Got a result " + currentUserImageObject.get("UserObjectId") );
+                    try {
+                        ParseFile profileImageFile = object.getParseFile("ProfileImageFile");
+                        byte [] profileImageByteArray= new byte[0];
+                        if (profileImageFile != null){
+                            profileImageByteArray = profileImageFile.getData();
+                            barberProfileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileImageByteArray,0,profileImageByteArray.length));
+                        }
+                        ParseFile imageView1File = object.getParseFile("ImageView1File");
+                        byte [] imageView1ByteArray = new byte[0];
+                        if (imageView1File != null){
+                            imageView1ByteArray = imageView1File.getData();
+                            barberImageView1.setImageBitmap(BitmapFactory.decodeByteArray(imageView1ByteArray,0,imageView1ByteArray.length));
+                        }
+                        ParseFile imageView2File = object.getParseFile("ImageView2File");
+                        byte [] imageView2ByteArray = new byte[0];
+                        if (imageView2File != null){
+                            imageView2ByteArray = imageView2File.getData();
+                            barberImageView2.setImageBitmap(BitmapFactory.decodeByteArray(imageView2ByteArray,0,imageView2ByteArray.length));
+                        }
+                        ParseFile imageView3File = object.getParseFile("ImageView3File");
+                        byte [] imageView3ByteArray = new byte[0];
+                        if (imageView3File != null){
+                            imageView3ByteArray = imageView3File.getData();
+                            barberImageView3.setImageBitmap(BitmapFactory.decodeByteArray(imageView3ByteArray,0,imageView3ByteArray.length));
+                        }
+                        ParseFile imageView4File = object.getParseFile("ImageView4File");
+                        byte [] imageView4ByteArray = new byte[0];
+                        if (imageView4File != null){
+                            imageView4ByteArray = imageView4File.getData();
+                            barberImageView4.setImageBitmap(BitmapFactory.decodeByteArray(imageView4ByteArray,0,imageView4ByteArray.length));
+                        }
+                        ParseFile imageView5File = object.getParseFile("ImageView5File");
+                        byte [] imageView5ByteArray = new byte[0];
+                        if (imageView5File != null){
+                            imageView5ByteArray = imageView5File.getData();
+                            barberImageView5.setImageBitmap(BitmapFactory.decodeByteArray(imageView5ByteArray,0,imageView5ByteArray.length));
+                        }
+                        ParseFile imageView6File = object.getParseFile("ImageView6File");
+                        byte [] imageView6ByteArray = new byte[0];
+                        if (imageView1File != null){
+                            imageView6ByteArray = imageView6File.getData();
+                            barberImageView6.setImageBitmap(BitmapFactory.decodeByteArray(imageView6ByteArray,0,imageView6ByteArray.length));
+                        }
+
+                    }//End of try
+                    catch (ParseException e1){
+                        Log.i("imageUploadTest", "Error occured trying to query imageobject " + e1.getMessage());
+                    }
+                }//End of query exception check
+                else{
+                    Log.i("ImagesQuerySuccess","Error occured " + e.getMessage());
+                }
+            }//End of ParseQuery Result Method
+        });
 
         barberAddressEditText = (EditText) findViewById(R.id.barberAddressEditText);
          barberPlaceNameEditText = (EditText) findViewById(R.id.barberPlaceNameEditText);
@@ -160,7 +264,6 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
                 if (barberProfileImage != null && barberAddressEditText.getText().length()>0 && barberPlaceNameEditText.getText().length()>0 &&
                         barberAboutYouEditText.getText().length()>0){
                     //Load the info into the database
-                    currentUser = ParseUser.getCurrentUser();
                     if (currentUser ==  null){
                         Log.e("FindUserinBarberAct","Current user is null");
                     }
@@ -179,39 +282,93 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
                         try {
                            final  LatLng address = task.execute(googleGeocodingURL + addressStreetNumber + "+" +addressStreetName + "+" + addressStreetCity + addressStreetState).get();
                             if (address!= null){
-                                ParseQuery<ParseObject> query = ParseQuery.getQuery("Barbers");
-                                query.whereEqualTo("barberUserId",currentUser.getObjectId());
-                                query.findInBackground(new FindCallback<ParseObject>() {
-                                    @Override
-                                    public void done(List<ParseObject> objects, ParseException e) {
-                                        if (e == null) {
-                                            if(objects != null && objects.size() > 0){
-                                                ParseObject barberObject = objects.get(0);
-                                                Log.i("BarberQuery","Query was succesful with object id "+ currentUser.getObjectId() +" object " + barberObject.get("barberUserId"));
+                                barberObject.put("barberAddress", new ParseGeoPoint(address.latitude,address.longitude));
+                                barberObject.put("barberAboutText", barberAboutYouEditText.getText().toString());
+                                barberObject.put("barberPlaceName",barberPlaceNameEditText.getText().toString());
+                                //Get image drawable from profileImageview
+                                BitmapDrawable profileImageBitMapdrawable = ((BitmapDrawable)barberProfileImage.getDrawable());
+                                // Create the ParseFile
+                                ParseFile profileImageFile = new ParseFile("profileImage.png", getImageViewByteArray(profileImageBitMapdrawable));
+                                // Upload the image into Parse Cloud
+                                profileImageFile.saveInBackground();
 
-                                                barberObject.put("barberAddress", new ParseGeoPoint(address.latitude,address.longitude));
-                                                barberObject.put("barberAboutText", barberAboutYouEditText.getText().toString());
-                                                barberObject.put("barberPlaceName",barberPlaceNameEditText.getText().toString());
-                                                barberObject.saveInBackground(new SaveCallback() {
-                                                    @Override
-                                                    public void done(ParseException e) {
-                                                        if (e == null){
-                                                            Log.i("BarberProfileTest", "Data has been save for user " + currentUser.getUsername() );
-                                                            Toast.makeText(getApplicationContext(),"Profile has been update" + " " + currentUser.getUsername(),Toast.LENGTH_SHORT).show();
-                                                        }else{
-                                                            Log.i("BarberProfileTest", "Data was not able to save " + e.getMessage() );
+                                //Create the parsefile for imageview1
+                                BitmapDrawable imageView1BitMapDrawable = ((BitmapDrawable) barberImageView1.getDrawable());
+                                ParseFile imageView1File = new ParseFile("imageView1.png",getImageViewByteArray(imageView1BitMapDrawable));
+                                imageView1File.saveInBackground();
 
-                                                        }
-                                                    }
-                                                });
+                                //
+                                BitmapDrawable imageView2BitMapDrawable = ((BitmapDrawable) barberImageView2.getDrawable());
+                                ParseFile imageView2File = new ParseFile("imageView2.png",getImageViewByteArray(imageView2BitMapDrawable));
+                                imageView2File.saveInBackground();
+
+                                BitmapDrawable imageView3BitMapDrawable = ((BitmapDrawable) barberImageView3.getDrawable());
+                                ParseFile imageView3File = new ParseFile("imageView3.png",getImageViewByteArray(imageView3BitMapDrawable));
+                                imageView3File.saveInBackground();
+
+                                BitmapDrawable imageView4BitMapDrawable = ((BitmapDrawable) barberImageView4.getDrawable());
+                                ParseFile imageView4File = new ParseFile("imageView4.png",getImageViewByteArray(imageView4BitMapDrawable));
+                                imageView4File.saveInBackground();
+
+                                BitmapDrawable imageView5BitMapDrawable = ((BitmapDrawable) barberImageView5.getDrawable());
+                                ParseFile imageView5File = new ParseFile("imageView5.png",getImageViewByteArray(imageView5BitMapDrawable));
+                                imageView5File.saveInBackground();
+
+                                BitmapDrawable imageView6BitMapDrawable = ((BitmapDrawable) barberImageView6.getDrawable());
+                                ParseFile imageView6File = new ParseFile("imageView6.png",getImageViewByteArray(imageView6BitMapDrawable));
+                                imageView6File.saveInBackground();
+
+                                        // Create a column named "ImageFile" and insert the image
+                                        currentUserImageObject.put("ProfileImageFile", profileImageFile);
+                                        //Create the colum name imagView1File
+                                        currentUserImageObject.put("ImageView1File",imageView1File);
+
+                                        //Create the colum name imagView2File
+                                        currentUserImageObject.put("ImageView2File",imageView2File);
+
+                                        //Create the colum name imagView1File
+                                        currentUserImageObject.put("ImageView3File",imageView3File);
+
+                                        //Create the colum name imagView1File
+                                        currentUserImageObject.put("ImageView4File",imageView4File);
+
+                                        //Create the colum name imagView1File
+                                        currentUserImageObject.put("ImageView5File",imageView5File);
+
+                                        //Create the colum name imagView1File
+                                        currentUserImageObject.put("ImageView6File",imageView6File);
+                                        // Create the class and the columns
+                                        currentUserImageObject.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                if(e==null){
+                                                    Log.i("barberLoadingCheck", "All the barbers data was succcesfully update");
+                                                }
+                                                else{
+                                                    Log.i("barLoadingCheck", "There was an error: " + e.getMessage());
+                                                }
                                             }
-                                        }//End of if
-                                        else {
-                                            // something went wrong
-                                            Log.i("BarberQuery","Query not succesful "+ e.getMessage() );
+                                        });
+
+                                        // Show a simple toast message
+                                        Toast.makeText(getApplicationContext(), "Images Uploaded",
+                                                Toast.LENGTH_SHORT).show();
+
+                                barberObject.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e == null){
+                                            Log.i("BarberProfileTest", "Data has been save for user " + currentUser.getUsername() );
+                                            Toast.makeText(getApplicationContext(),"Profile has been update" + " " + currentUser.getUsername(),Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            Log.i("BarberProfileTest", "Data was not able to save " + e.getMessage() );
+
                                         }
                                     }
                                 });
+
+
+
                             }
                             else {
                                 Toast.makeText(getApplicationContext(),"Address returned null", Toast.LENGTH_LONG).show();
@@ -334,7 +491,7 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
          @Override
          public void onClick(DialogInterface dialog, int which) {
              Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-             startActivityForResult(i,1);
+             startActivityForResult(i,REQUEST_PHOTO_ALBUM);
          }
      });
 
@@ -416,6 +573,7 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
 
+        //Final Image from Camera
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         imageView.setImageBitmap(bitmap);
     }
@@ -468,12 +626,13 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
             if (barberProfileImageisClicked){
                 barberProfileImageisClicked = false;
 
-                if (requestCode == 1 && data != null) {
+                if (requestCode == REQUEST_PHOTO_ALBUM && data != null) {
                     //Get the Uri for the image data returned
                     Uri selectedImage = data.getData();
                     try {
                         Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), selectedImage);
                         barberProfileImage.setImageBitmap(bitmapImage);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

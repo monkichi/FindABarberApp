@@ -46,7 +46,7 @@ public class SignUpActivity extends AppCompatActivity {
     TextView userOrBarberTextView;
     String barberOrUser = "barber";
     private RelativeLayout relativeLayout;
-
+    private ParseUser user;
 
 
     @Override
@@ -86,7 +86,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 //Sign up user only if all information is inserted
                 if (username.length() > 0 && password.length() > 0 && name.length() > 0 && email.length() > 0) {
-                    final ParseUser user = new ParseUser();
+                     user = new ParseUser();
                     ParseACL userAcl= new ParseACL();
                     userAcl.setPublicWriteAccess(true);
                     user.setACL(userAcl);
@@ -104,6 +104,25 @@ public class SignUpActivity extends AppCompatActivity {
                         public void done(ParseException e) {
                             if (e == null) {
                                 Log.i("Parse Info", "Sign up was successful");
+                                //Create the imageObject for the user
+                                ParseObject userImages = new ParseObject("Images");
+                                ParseACL imagesAcl = new ParseACL();
+                                imagesAcl.setPublicReadAccess(true);
+                                imagesAcl.setPublicWriteAccess(true);
+                                userImages.setACL(imagesAcl);
+                                //Set the Image objects look up key
+                                userImages.put("UserObjectId",user.getObjectId());
+                                userImages.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if(e== null){
+                                            Log.i("userImageObject","Image object was sucessfully saved");
+                                        }
+                                        else{
+                                            Log.i("userImageObect", "Error saving the image object " + e.getMessage());
+                                        }
+                                    }
+                                });
 
                                 if(barberOrUser.equals("barber")){
                                     //Open Barber Activity
