@@ -18,7 +18,15 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!--Permissions for camera-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!--To read from Phones Memory-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--To use the camera-->
+    <uses-feature android:name="android.hardware.camera" android:required="false"></uses-feature>
+    <!---->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:name=".StarterApplication"
         android:allowBackup="true"
@@ -63,6 +71,10 @@
             android:name=".BarberProfileActivity"/>
         <activity
             android:name=".BarberActivity"/>
+        <activity
+            android:name=".ViewBarbersActivity"/>
+        <activity
+            android:name=".ViewFollowingActivity"/>
 
     </application>
 

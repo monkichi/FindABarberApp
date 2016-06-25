@@ -31,18 +31,21 @@ public class StarterApplication extends Application {
     // Add your initialization code here
     Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
             .applicationId("testapp3245jfjdkfa88983937893789")
-            .clientKey(null)
+            .clientKey("dfjjdafdfjkc83727373")
             .server("http://testapp3245.herokuapp.com/parse/")
             .build()
     );
 
 
 
-
-    ParseUser.enableAutomaticUser();
+    /*
+    * Can pause some issues
+    * http://stackoverflow.com/questions/20254545/parse-for-android-parseuser-logout-doesnt-log-user-out
+    * */
+    //ParseUser.enableAutomaticUser();
     ParseACL defaultACL = new ParseACL();
     // Optionally enable public read access.
-    // defaultACL.setPublicReadAccess(true);
+    defaultACL.setPublicReadAccess(true);
     ParseACL.setDefaultACL(defaultACL, true);
 
 

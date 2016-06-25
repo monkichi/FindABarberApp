@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,9 +19,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.ParseACL;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
+
+import java.util.ArrayList;
 
 /**
  * Created by chris on 6/5/16.
@@ -47,7 +53,9 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_layout);
+        Toolbar actionToolbar = (Toolbar) findViewById(R.id.my_toolbar);
 
+        setSupportActionBar(actionToolbar);
         passwordEditText = (EditText) findViewById(R.id.signUpPasswordEditText);
         userUserNameEditText = (EditText) findViewById(R.id.signUpUserNameEditText);
         userEmailEditText = (EditText) findViewById(R.id.signUpEmailEditText);
@@ -78,7 +86,10 @@ public class SignUpActivity extends AppCompatActivity {
 
                 //Sign up user only if all information is inserted
                 if (username.length() > 0 && password.length() > 0 && name.length() > 0 && email.length() > 0) {
-                    ParseUser user = new ParseUser();
+                    final ParseUser user = new ParseUser();
+                    ParseACL userAcl= new ParseACL();
+                    userAcl.setPublicWriteAccess(true);
+                    user.setACL(userAcl);
                     user.setUsername(username);
                     user.setPassword(password);
                     user.setEmail(email);
@@ -86,6 +97,8 @@ public class SignUpActivity extends AppCompatActivity {
                     //Other fields can be set just like with a parse object
                     user.put("name", name);
                     user.put("barberOrUser",barberOrUser);
+                    user.put("isFollowing", new ArrayList<String>());
+                    //Create Barber if necessary
                     user.signUpInBackground(new SignUpCallback() {
                         @Override
                         public void done(ParseException e) {
@@ -93,9 +106,33 @@ public class SignUpActivity extends AppCompatActivity {
                                 Log.i("Parse Info", "Sign up was successful");
 
                                 if(barberOrUser.equals("barber")){
-                                    //Open Barber Activty
+                                    //Open Barber Activity
+                                    ParseObject barber = new ParseObject("Barbers");
+                                    ParseACL defaultAcl = new ParseACL();
+                                    defaultAcl.setPublicReadAccess(true);
+                                    defaultAcl.setPublicWriteAccess(true);
+                                    barber.setACL(defaultAcl);
+                                    //Add the barberUsers Id to the Barbers table
+                                    barber.put("barberUserId",user.getObjectId());
+                                    //Add the barberUsers Name
+                                    barber.put("barberName", user.getString("name"));
+                                    //Add the barberUsers Username
+                                    barber.put("barberUserName", user.getUsername());
 
+                                    barber.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if(e==null){
+                                                Log.i("BarberSaveTest","Barber save succesful");
+                                            }
+                                            else{
+                                                Log.i("BarberSaveTest","Failed to save barber" + e.getMessage());
+                                            }
+                                        }
+                                    });
 
+                                    Intent userActivityIntent = new Intent(getApplicationContext(), BarberActivity.class);
+                                    startActivity(userActivityIntent);
                                 }
                                 else{
                                     //Open user Activity

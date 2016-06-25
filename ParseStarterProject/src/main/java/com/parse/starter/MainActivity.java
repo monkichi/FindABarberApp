@@ -8,6 +8,8 @@
  */
 package com.parse.starter;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
@@ -25,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseAnalytics;
@@ -39,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
   EditText userPasswordEditText;
   Button  loginButton;
   TextView signUpTextView;
-    ParseUser currentUser;
     RelativeLayout relativeLayout;
 
     public void loginButtonListener(){
@@ -57,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
                                 //User Succesfully Logged in
                                 Log.i("Parse Log In", "Login  was sucessfull" );
                                 Log.i("Parse Log In","Users status" + " " + user.getUsername() + " "
-
                                 + user.getString("barberOrUser"));
                                 if(user.getString("barberOrUser").equals("barber")){
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                             else{
                                 //Login was not succesful
-                                Toast.makeText(getApplicationContext(), e.getMessage().substring(e.getMessage().indexOf(" ")) ,Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), e.getMessage() ,Toast.LENGTH_LONG).show();
 
                             }
                         }
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //Check if we are currently logged in before Signing up
-                if (currentUser != null) {
+                if (ParseUser.getCurrentUser() != null) {
                     // do stuff with the user
                     Toast.makeText(getApplicationContext(), "User is already logged in", Toast.LENGTH_SHORT).show();
                 } else {
@@ -117,44 +118,54 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-//            relativeLayout = (RelativeLayout) findViewById(R.id.mainRelativeLayout);
-//            relativeLayout.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-//                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
-//                }
-//            });
+            ParseAnalytics.trackAppOpenedInBackground(getIntent());
+            String barberOrUser = " ";
+    getSupportActionBar();
     userNameEditText = (EditText) findViewById(R.id.usernameEditText);
     userPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
     loginButton = (Button) findViewById(R.id.loginRegisterButton);
             signUpTextView = (TextView) findViewById(R.id.signUpView);
+            relativeLayout = (RelativeLayout) findViewById(R.id.mainRelativeLayout);
+            relativeLayout.setOnClickListener(new View.OnClickListener() {
 
-            if (ParseUser.getCurrentUser() ==  null){
-
-            }
-            else{
-                ParseUser.getCurrentUser().logOutInBackground(new LogOutCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e != null){
-                            Log.i("Initial Log out", "Log out was succesful" + " " );
-                        }
+                @Override
+                public void onClick(View v) {
+                    hideSoftKeyboard(MainActivity.this);
+                    Toast.makeText(getApplicationContext(),"You touched outside the keyboard",Toast.LENGTH_LONG).show();
+                }
+            });
+            loginButtonListener();
+            signUpButtonListener();
+            //Check if user is logged int
+            ParseUser  currentUser = ParseUser.getCurrentUser();
+            if (currentUser !=  null){
+                Log.i("Get barberOrUser test","Not Null user" + currentUser.getUsername() + " " + currentUser.get("barberOrUser"));
+                barberOrUser = currentUser.getString("barberOrUser");
+                if (barberOrUser != null){
+                    if(barberOrUser.equals("barber")){
+                        Intent barberActityintent = new Intent(getApplicationContext(),BarberActivity.class);
+                        startActivity(barberActityintent);
                     }
-                });
+                    else{
+                        Intent userActivity = new Intent(getApplicationContext(),UserMapsActivity.class);
+                        startActivity(userActivity);
+                    }
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"Cannot get barberOrUser for" + " " + currentUser.getUsername(),Toast.LENGTH_LONG).show();
+                }
+
             }
-
-
-
-    loginButtonListener();
-    signUpButtonListener();
-
-    ParseAnalytics.trackAppOpenedInBackground(getIntent());
 
 
   }
 
 
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
 
     @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -171,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
     int id = item.getItemId();
 
     //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
+    if (id == R.id.logOut_action) {
       return true;
     }
 
