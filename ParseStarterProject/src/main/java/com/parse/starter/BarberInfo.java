@@ -12,8 +12,15 @@ public class BarberInfo {
     String barberUsername;
     LatLng barberLocation;
     String barberPlaceName;
+    double distanceFromBarber;
 
+    public double getDistanceFromBarber() {
+        return distanceFromBarber;
+    }
 
+    public void setDistanceFromBarber(double distanceFromBarber) {
+        this.distanceFromBarber = distanceFromBarber;
+    }
 
     public BarberInfo() {
 
@@ -30,13 +37,14 @@ public class BarberInfo {
         this.barberObjectId = barberObjectId;
     }
 
-    public BarberInfo(String barberName, String barberUsername, LatLng barberLocation, String barberShopName, String barberAboutMessage, String id) {
+    public BarberInfo(String barberName, String barberUsername, LatLng barberLocation, String barberShopName, String barberAboutMessage, String id, float distance) {
         this.barberName = barberName;
         this.barberUsername = barberUsername;
         this.barberLocation = barberLocation;
         this.barberPlaceName = barberShopName;
         this.barberAboutMessage = barberAboutMessage;
         this.barberObjectId = id;
+        this.distanceFromBarber = distance;
 
     }
 

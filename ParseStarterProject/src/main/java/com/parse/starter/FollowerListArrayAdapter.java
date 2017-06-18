@@ -61,6 +61,7 @@ public class FollowerListArrayAdapter extends ArrayAdapter<FollowerInfo> {
         else{
             viewHolder.followerUserNameTextView.setText(followerInfo.followerUserName);
             viewHolder.followerBarberOrUserTextView.setText(followerInfo.followerBarberOrUser);
+            viewHolder.followerProfileImage.setImageBitmap(followerInfo.followerProfileImage);
         }
         return view;
     }

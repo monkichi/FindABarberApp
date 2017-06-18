@@ -1,6 +1,7 @@
 package com.parse.starter;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MotionEventCompat;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -35,7 +37,7 @@ public class ViewFollowingActivity extends AppCompatActivity {
     ArrayList<FollowerInfo> followersList;
     int i;
     List<String> isFollowingList;
-   LinearLayout viewFollowersLayout;
+   RelativeLayout viewFollowersLayout;
     private float y1;
     private float x1;
     private float x2;
@@ -48,7 +50,8 @@ public class ViewFollowingActivity extends AppCompatActivity {
         Log.i("followerInfo","Opened ViewFollowers");
         followersListView = (ListView) findViewById(R.id.barberFollowersListView);
         followersList = new ArrayList<FollowerInfo>();
-        viewFollowersLayout = (LinearLayout) findViewById(R.id.followingActivityLayout);
+       viewFollowersLayout = (RelativeLayout) findViewById(R.id.followingActivityLayout);
+        getFollowers();
         viewFollowersLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -71,14 +74,22 @@ public class ViewFollowingActivity extends AppCompatActivity {
                         {
                             Toast.makeText(getApplicationContext(), "Left to Right Swap Performed", Toast.LENGTH_SHORT).show();
 
+
                         }
 
                         // if right to left sweep event on screen
                         if (x1 > x2)
                         {
                             Toast.makeText(getApplicationContext(), "Right to Left Swap Performed", Toast.LENGTH_SHORT).show();
-                            Intent rightSwipeBarberProfileIntent = new Intent(getApplicationContext(),UserMapsActivity.class);
-                            startActivity(rightSwipeBarberProfileIntent);
+                            if (ParseUser.getCurrentUser().getString("barberOrUser").equals("barber")) {
+                                Intent rightSwipeBarberSwipeIntent = new Intent(getApplicationContext(),BarberActivity.class);
+                                startActivity(rightSwipeBarberSwipeIntent);
+                            }
+                            else{
+                                Intent rightSwipeBarberProfileIntent = new Intent(getApplicationContext(),UserMapsActivity.class);
+                                startActivity(rightSwipeBarberProfileIntent);
+                            }
+
                         }
 
                         // if UP to Down sweep event on screen
@@ -100,7 +111,8 @@ public class ViewFollowingActivity extends AppCompatActivity {
                 //Wasnt working
             }
         });
-        getFollowers();
+
+
         followersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -159,8 +171,30 @@ public class ViewFollowingActivity extends AppCompatActivity {
                             } else {
                                 // great, get the name etc
                                FollowerInfo followerInfo = new FollowerInfo(user.getObjectId(),user.getUsername(),user.getString("barberOrUser"));
+                                ParseQuery<ParseObject> profileImageQuery = ParseQuery.getQuery("Images");
+                                Log.i("profileImageTest","Size of array " + isFollowingList.size() + "pointer" + i);
+                                profileImageQuery.whereEqualTo("UserObjectId",isFollowingList.get(i - 1));
+                                try {
+                                    ParseObject userImageObject = profileImageQuery.getFirst();
+                                    ParseFile profileImageFile = userImageObject.getParseFile("ProfileImageFile");
+                                    byte [] profileImageByteArray= new byte[0];
+                                    if (profileImageFile != null){
+                                        profileImageByteArray = profileImageFile.getData();
+                                        followerInfo.setFollowerProfileImage(BitmapFactory.decodeByteArray(profileImageByteArray,0,profileImageByteArray.length));
+                                    }
+                                } catch (ParseException e1) {
+                                    e1.printStackTrace();
+                                }
                                 followersList.add(followerInfo);
                                 Log.i("followerTest", "Got a match!");
+                                if (i  == isFollowingList.size()  ){
+                                    followersListView.setAdapter(new FollowerListArrayAdapter(getApplicationContext(),R.layout.follower_list_item,followersList));
+                                    Log.i("followerTest","Adapter was set with list objects " + followersList.size());
+
+                                }
+                                else{
+                                    Log.i("followerTest", "Coulndt set listAdapter " + String.valueOf(i)+" " + isFollowingList.size());
+                                }
                             }
                         } else {
                             // Something went wrong.
@@ -169,7 +203,7 @@ public class ViewFollowingActivity extends AppCompatActivity {
                     }
                 });
             }//End of isfollowing list iterator
-            followersListView.setAdapter(new FollowerListArrayAdapter(getApplicationContext(),R.layout.follower_list_item,followersList));
+
         }
     }
 

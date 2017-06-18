@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:9:1-81:12
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:9:1-80:12
 	package
 		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:10:5-32
 		INJECTED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml
@@ -28,7 +28,7 @@ ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/
 	android:name
 		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:20:22-76
 uses-permission#android.permission.ACCESS_COARSE_LOCATION
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:21:5-80
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:21:5-81
 	android:name
 		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:21:22-78
 uses-permission#android.permission.CAMERA
@@ -40,131 +40,113 @@ ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/
 	android:name
 		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:25:22-77
 uses-feature#android.hardware.camera
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:27:5-98
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:27:5-29:36
 	android:required
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:27:58-82
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:29:9-33
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:27:19-57
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:28:9-47
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:29:5-81
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:31:5-81
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:29:22-78
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:31:22-78
 application
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:30:5-79:19
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:33:5-78:19
 MERGED from [com.android.support:appcompat-v7:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:animated-vector-drawable:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/AndroidManifest.xml:7:5-20
 MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:7:5-20
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
-MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:7:5-20
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services-maps:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.0.2/AndroidManifest.xml:27:5-20
 MERGED from [com.google.android.gms:play-services-base:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/AndroidManifest.xml:19:5-23:19
-MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:20:5-24:19
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.firebase:firebase-common:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.0.2/AndroidManifest.xml:5:5-12:19
-MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:20:5-24:19
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services-tasks:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.0.2/AndroidManifest.xml:5:5-20
-MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:20:5-24:19
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
-MERGED from [com.google.android.gms:play-services-tasks:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.0.2/AndroidManifest.xml:5:5-20
-MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:20:5-24:19
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:20:5-24:19
 MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
 	android:label
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:34:9-41
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:37:9-41
 	android:allowBackup
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:32:9-35
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:35:9-35
 	android:icon
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:33:9-43
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:36:9-43
 	android:theme
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:36:9-40
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:38:9-40
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:31:9-43
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:34:9-43
 meta-data#com.parse.APPLICATION_ID
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:37:9-39:52
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:39:9-41:52
 	android:value
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:39:13-49
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:41:13-49
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:38:13-52
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:40:13-52
 meta-data#com.parse.CLIENT_KEY
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:40:9-42:56
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:42:9-44:56
 	android:value
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:42:13-53
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:44:13-53
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:41:13-48
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:43:13-48
 activity#com.parse.starter.MainActivity
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:44:9-52:20
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:46:9-54:20
 	android:label
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:46:13-45
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:48:13-45
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:45:13-41
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:47:13-41
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:47:13-51:29
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:49:13-53:29
 action#android.intent.action.MAIN
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:48:17-69
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:50:17-69
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:48:25-66
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:50:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:50:17-77
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:52:17-77
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:50:27-74
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:52:27-74
 activity#com.parse.starter.SignUpActivity
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:53:9-52
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:55:9-52
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:53:19-49
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:55:19-49
 meta-data#com.google.android.geo.API_KEY
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:63:9-65:55
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:65:9-67:55
 	android:value
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:65:13-52
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:67:13-52
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:64:13-58
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:66:13-58
 activity#com.parse.starter.UserMapsActivity
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:67:9-69:63
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:69:9-71:64
 	android:label
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:69:13-61
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:71:13-61
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:68:13-45
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:70:13-45
 activity#com.parse.starter.BarberProfileActivity
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:70:9-71:52
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:72:9-59
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:71:13-50
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:72:19-56
 activity#com.parse.starter.BarberActivity
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:72:9-73:45
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:73:9-52
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:73:13-43
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:73:19-49
 activity#com.parse.starter.ViewBarbersActivity
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:74:9-75:50
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:74:9-57
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:75:13-48
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:74:19-54
 activity#com.parse.starter.ViewFollowingActivity
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:76:9-77:52
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:75:9-59
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:77:13-50
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:75:19-56
+activity#com.parse.starter.ViewFollowersActivity
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:76:9-58
+	android:name
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:76:19-56
+activity#com.parse.starter.ExploreBarbersPhotosActivity
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:77:9-65
+	android:name
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:77:19-63
 uses-sdk
 INJECTED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [com.android.support:appcompat-v7:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/AndroidManifest.xml:21:5-23:78
 MERGED from [com.android.support:animated-vector-drawable:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/AndroidManifest.xml:5:5-44
 MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:5:5-43
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:5:5-43
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
 MERGED from [com.google.android.gms:play-services-maps:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.0.2/AndroidManifest.xml:26:5-42
 MERGED from [com.google.android.gms:play-services-base:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/AndroidManifest.xml:18:5-42
-MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:18:5-42
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
 MERGED from [com.google.firebase:firebase-common:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.0.2/AndroidManifest.xml:4:5-43
-MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:18:5-42
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
 MERGED from [com.google.android.gms:play-services-tasks:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.0.2/AndroidManifest.xml:4:5-43
-MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:18:5-42
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
-MERGED from [com.google.android.gms:play-services-tasks:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.0.2/AndroidManifest.xml:4:5-43
-MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:18:5-42
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
 MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:18:5-42
 MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
 	tools:overrideLibrary
@@ -189,16 +171,6 @@ ADDED from [com.google.android.gms:play-services-base:9.0.2] /Users/chris/Docume
 		ADDED from [com.google.android.gms:play-services-base:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/AndroidManifest.xml:21:19-78
 	android:name
 		ADDED from [com.google.android.gms:play-services-base:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/AndroidManifest.xml:20:19-85
-meta-data#com.google.android.gms.version
-ADDED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:21:9-23:69
-MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:21:9-23:69
-MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:21:9-23:69
-MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:21:9-23:69
-MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:21:9-23:69
-	android:value
-		ADDED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:23:13-66
-	android:name
-		ADDED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:22:13-58
 provider#com.google.firebase.provider.FirebaseInitProvider
 ADDED from [com.google.firebase:firebase-common:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.0.2/AndroidManifest.xml:7:9-11:39
 	android:authorities
@@ -209,3 +181,9 @@ ADDED from [com.google.firebase:firebase-common:9.0.2] /Users/chris/Documents/gi
 		ADDED from [com.google.firebase:firebase-common:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.0.2/AndroidManifest.xml:11:13-36
 	android:name
 		ADDED from [com.google.firebase:firebase-common:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.0.2/AndroidManifest.xml:9:13-58
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:21:9-23:69
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:23:13-66
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:22:13-58

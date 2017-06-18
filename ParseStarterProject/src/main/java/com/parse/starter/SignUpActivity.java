@@ -87,8 +87,9 @@ public class SignUpActivity extends AppCompatActivity {
                 //Sign up user only if all information is inserted
                 if (username.length() > 0 && password.length() > 0 && name.length() > 0 && email.length() > 0) {
                      user = new ParseUser();
-                    ParseACL userAcl= new ParseACL();
+                    final ParseACL userAcl= new ParseACL();
                     userAcl.setPublicWriteAccess(true);
+                    userAcl.setPublicReadAccess(true);
                     user.setACL(userAcl);
                     user.setUsername(username);
                     user.setPassword(password);
@@ -120,6 +121,25 @@ public class SignUpActivity extends AppCompatActivity {
                                         }
                                         else{
                                             Log.i("userImageObect", "Error saving the image object " + e.getMessage());
+                                        }
+                                    }
+                                });
+
+                                ParseObject userFollowers = new ParseObject("Followers");
+                                ParseACL followersACl = new ParseACL();
+                                followersACl.setPublicReadAccess(true);
+                                followersACl.setPublicWriteAccess(true);
+                                userFollowers.setACL(followersACl);
+                                userFollowers.put("followerUserId",user.getObjectId());
+                                userFollowers.put("followersList", new ArrayList<String>());
+                                userFollowers.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if(e==null){
+                                            Log.i("userFollowersTest", "Saving Users was sucessful");
+                                        }
+                                        else{
+
                                         }
                                     }
                                 });

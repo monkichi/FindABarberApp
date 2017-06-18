@@ -35,7 +35,8 @@ public class StarterApplication extends Application {
             .server("http://testapp3245.herokuapp.com/parse/")
             .build()
     );
-
+//    testapp3245.herokuapp.com
+    //application pass word: kt8MjMdgNiqH
 
 
     /*
@@ -43,10 +44,29 @@ public class StarterApplication extends Application {
     * http://stackoverflow.com/questions/20254545/parse-for-android-parseuser-logout-doesnt-log-user-out
     * */
     //ParseUser.enableAutomaticUser();
+
+    ParseObject score = new ParseObject("Score");
+    score.put("userName", "Matt");
+    score.saveInBackground(new SaveCallback() {
+      @Override
+      public void done(ParseException e) {
+        if (e==null){
+          Log.d("ParseAmazonCheck", "Data was saved succesfull");
+        }
+        else{
+          Log.e("ParseAmazonError", "Data was not saved " + e.toString());
+        }
+      }
+    });
+
+
     ParseACL defaultACL = new ParseACL();
     // Optionally enable public read access.
     defaultACL.setPublicReadAccess(true);
     ParseACL.setDefaultACL(defaultACL, true);
+
+
+
 
 
 

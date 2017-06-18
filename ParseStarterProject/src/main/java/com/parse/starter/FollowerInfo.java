@@ -1,5 +1,7 @@
 package com.parse.starter;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by chris on 6/23/16.
  */
@@ -10,6 +12,17 @@ public class FollowerInfo {
     String followerUserName;
     //barberOrUser
     String followerBarberOrUser;
+
+    public Bitmap getFollowerProfileImage() {
+        return followerProfileImage;
+    }
+
+    public void setFollowerProfileImage(Bitmap followerProfileImage) {
+        this.followerProfileImage = followerProfileImage;
+    }
+
+    //Image Bitmap
+    Bitmap followerProfileImage;
 
     public String getFollowerUserId() {
         return followerUserId;

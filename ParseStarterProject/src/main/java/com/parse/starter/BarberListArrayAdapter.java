@@ -8,7 +8,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Created by chris on 6/21/16.
@@ -41,6 +44,7 @@ public class BarberListArrayAdapter extends ArrayAdapter<BarberInfo> {
             viewHolder = new ListViewItemholder();
             viewHolder.mBarberName = (TextView) view.findViewById(R.id.barberName);
             viewHolder.mBarberAddress = (TextView) view.findViewById(R.id.barberAddress);
+            viewHolder.mDistanceFromBarber = (TextView) view.findViewById(R.id.distanceFromBarber);
 
 
             view.setTag(viewHolder);
@@ -52,12 +56,16 @@ public class BarberListArrayAdapter extends ArrayAdapter<BarberInfo> {
         //Update the UI
         viewHolder.mBarberName.setText(info.barberName);
         viewHolder.mBarberAddress.setText(info.barberPlaceName);
+        BigDecimal bd = new BigDecimal(info.distanceFromBarber).setScale(2, RoundingMode.HALF_EVEN);
+        Double roundedDistance = bd.doubleValue();
+        viewHolder.mDistanceFromBarber.setText(String.valueOf(roundedDistance) +" miles");
 
         return view;
     }
     private class ListViewItemholder{
         TextView mBarberName;
         TextView mBarberAddress;
+        TextView mDistanceFromBarber;
 
     }
 }

@@ -89,14 +89,17 @@ public class UserMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
         }
 
-        //Get the last know users location
+        //Get the last know users location from Device
         userLastLocation = mLocationManager.getLastKnownLocation(provider);
+        //When device does not know last location, request location
         if (userLastLocation == null) {
             mLocationManager.requestLocationUpdates(provider, 400, 1, this);
             //Get the last know users location
             userLastLocation = mLocationManager.getLastKnownLocation(provider);
         }
 
+
+        //Click Listener for selecting nearest barbers list item
   barbersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -196,8 +199,7 @@ public class UserMapsActivity extends AppCompatActivity implements OnMapReadyCal
             mMap.addMarker(new MarkerOptions().position(userCoordinates).title("Your location"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userCoordinates,10));
             //Trying to query the barbers around the current location
-
-            ParseGeoPoint barberLookUpCoordinate = new ParseGeoPoint(userLastLocation.getLatitude(),userLastLocation.getLongitude());
+            final ParseGeoPoint barberLookUpCoordinate = new ParseGeoPoint(userLastLocation.getLatitude(),userLastLocation.getLongitude());
             ParseQuery<ParseObject> query = ParseQuery.getQuery("Barbers");
             query.whereNear("barberAddress", barberLookUpCoordinate);
             query.findInBackground(new FindCallback<ParseObject>() {
@@ -219,6 +221,10 @@ public class UserMapsActivity extends AppCompatActivity implements OnMapReadyCal
                             barberInfo.setBarberUsername(barbers.getString("barberUserName"));
                             //Get and set the barberObjectId
                             barberInfo.setBarberObjectId(barbers.getObjectId());
+                            //Get the GeoPoint for the barbers coordinates
+                            ParseGeoPoint barbersLocation = barbers.getParseGeoPoint("barberAddress");
+                            //Set the distance from the two locations user and barbers
+                            barberInfo.setDistanceFromBarber(barberLookUpCoordinate.distanceInMilesTo(barbersLocation));
                             //Create Markers for barbersNear user
                             LatLng barberLoc = new LatLng(barberInfo.getBarberLocation().latitude,barberInfo.getBarberLocation().longitude);
                             mMap.addMarker(new MarkerOptions().position(barberLoc).title(barberInfo.barberPlaceName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
@@ -294,6 +300,7 @@ public class UserMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 {
                     Toast.makeText(this, "Left to Right Swap Performed", Toast.LENGTH_SHORT).show();
                     Intent rightSwipeViewFollowingIntent = new Intent(getApplicationContext(),ViewFollowingActivity.class);
+
                     startActivity(rightSwipeViewFollowingIntent);
                 }
 
@@ -301,6 +308,10 @@ public class UserMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 if (x1 > x2)
                 {
                     Toast.makeText(this, "Right to Left Swap Performed", Toast.LENGTH_SHORT).show();
+                    Intent leftSwipeViewFollowingIntent = new Intent(getApplicationContext(),ExploreBarbersPhotosActivity.class);
+                    leftSwipeViewFollowingIntent.putExtra("lat", userLastLocation.getLatitude());
+                    leftSwipeViewFollowingIntent.putExtra("long", userLastLocation.getLongitude());
+                    startActivity(leftSwipeViewFollowingIntent);
 
                 }
 

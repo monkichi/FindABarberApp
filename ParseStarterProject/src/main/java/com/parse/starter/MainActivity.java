@@ -9,7 +9,9 @@
 package com.parse.starter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
@@ -21,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -184,6 +187,56 @@ public class MainActivity extends AppCompatActivity {
     //noinspection SimplifiableIfStatement
     if (id == R.id.logOut_action) {
       return true;
+    }
+      else if (id ==R.id.check_messages_action){
+        //Create the Dialog to view the messages
+        Log.i("checkMessagesCheck","Check messages icon has been pressed");
+        AlertDialog.Builder viewMessagesBuilder = new AlertDialog.Builder(MainActivity.this);
+        viewMessagesBuilder.setTitle("Select One Name:-");
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                MainActivity.this,
+                android.R.layout.select_dialog_singlechoice);
+        arrayAdapter.add("Hardik");
+        arrayAdapter.add("Archit");
+        arrayAdapter.add("Jignesh");
+        arrayAdapter.add("Umang");
+        arrayAdapter.add("Gatti");
+
+        viewMessagesBuilder.setNegativeButton(
+                "cancel",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        viewMessagesBuilder.setAdapter(
+                arrayAdapter,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String strName = arrayAdapter.getItem(which);
+                        AlertDialog.Builder builderInner = new AlertDialog.Builder(
+                                MainActivity.this);
+                        builderInner.setMessage(strName);
+                        builderInner.setTitle("Your Selected Item is");
+                        builderInner.setPositiveButton(
+                                "Ok",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(
+                                            DialogInterface dialog,
+                                            int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        builderInner.show();
+                    }
+                });
+        viewMessagesBuilder.show();
+
     }
 
     return super.onOptionsItemSelected(item);

@@ -1,10 +1,12 @@
 package com.parse.starter;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,10 +15,12 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +31,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -60,6 +65,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -94,17 +100,14 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
     private boolean barberWorkImage4isClicked=false;
     private boolean barberWorkImage5isClicked=false;
     private boolean barberWorkImage6isClicked=false;
-    private String mProfilePhotoPath = "";
-    private String mWorkPhoto1Path= "";
-    private String mWorkPhoto2Path= "";
-    private String mWorkPhoto3Path="";
-    private String mWorkPhoto4Path="";
-    private String mWorkPhoto5Path="";
-    private String mWorkPhoto6Path= "";
-    private String photoPathReturned= "";
-    private String absolutePath="";
-    private ParseObject barberObject;
-    private ParseObject currentUserImageObject;
+     String mProfilePhotoPath = "";
+     String photoPathReturned= "";
+     String absolutePath="";
+     ParseObject barberObject;
+     ParseObject currentUserImageObject;
+    List<ParseObject> messagesReceivedList;
+     List<String> messagesReceiverUserNameList;
+     ArrayAdapter<String> arrayAdapter;
 
     //DownLoadBitmap
 
@@ -119,6 +122,34 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
                 if(objects != null && objects.size() > 0){
                     barberObject = objects.get(0);
                     Log.i("BarberQuery","Query was succesful with object id "+ currentUser.getObjectId() +" object " + barberObject.get("barberUserId"));
+                    //Query all the messages for the currentUserId which should be a barber
+                    ParseQuery<ParseObject> getMessagesObject = new ParseQuery<ParseObject>("Messages");
+                    getMessagesObject.whereEqualTo("receiverUserId",currentUser.getObjectId());
+                    getMessagesObject.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> objects, ParseException e) {
+                            if(e==null){
+                                if (objects.size() > 0){
+                                    Log.i("messagesQueryTest", "Query was succesful");
+                                    for (ParseObject messages: objects){
+                                        Log.i("messages", "Message from" + messages.getString("senderUserName")+ " " + "\n"+
+                                        "message content is " + messages.getString("messageContent"));
+                                        messagesReceivedList.add(messages);
+                                        messagesReceiverUserNameList.add(messages.getString("senderUserName"));
+                                        
+                                    }
+                                }
+                                else{
+                                    Log.i("messagesQueryTest","Query has no result " + objects.size());
+                                }
+
+                            }
+                            else{
+                                Log.i("messagesQueryTest", "Error getting messages query " + e.getMessage());
+
+                            }
+                        }
+                    });
                 }
             }//End of if
             else {
@@ -145,8 +176,10 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.barber_layout);
+        //Set up toolabar
         Toolbar actionToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(actionToolbar);
+       //Set up keyboard management
         relativeLayout = (RelativeLayout) findViewById(R.id.barberRelativeLayout);
         relativeLayout.setOnClickListener(new View.OnClickListener() {
 
@@ -157,8 +190,13 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
             }
         });
+         messagesReceivedList = new ArrayList<ParseObject>();
+        messagesReceiverUserNameList=new ArrayList<String>();
+        //Store the currentUSer Object
         currentUser = ParseUser.getCurrentUser();
+        //Get the currentUserBarbers info
         getCurrentBarber();
+
 
         barberProfileImage =(ImageView) findViewById(R.id.barberProfileImage);
         if (barberProfileImage != null) {
@@ -280,7 +318,7 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
                         String addressStreetState = addressStringArray[4];
 
                         try {
-                           final  LatLng address = task.execute(googleGeocodingURL + addressStreetNumber + "+" +addressStreetName + "+" + addressStreetCity + addressStreetState).get();
+                           LatLng address = task.execute(googleGeocodingURL + addressStreetNumber + "+" +addressStreetName + "+" + addressStreetCity + addressStreetState).get();
                             if (address!= null){
                                 barberObject.put("barberAddress", new ParseGeoPoint(address.latitude,address.longitude));
                                 barberObject.put("barberAboutText", barberAboutYouEditText.getText().toString());
@@ -385,6 +423,60 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
         });
+        relativeLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction())
+                {
+                    // when user first touches the screen we get x and y coordinate
+                    case MotionEvent.ACTION_DOWN:
+                    {
+                        x1 = event.getX();
+                        y1 = event.getY();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP:
+                    {
+                        x2 = event.getX();
+                        y2 = event.getY();
+
+                        //if left to right sweep event on screen
+                        if (x1 < x2)
+                        {
+                            Toast.makeText(BarberActivity.this, "Left to Right Swap Performed", Toast.LENGTH_SHORT).show();
+                            Intent leftSwipeViewFollowingIntent = new Intent(getApplicationContext(), ViewFollowersActivity.class);
+                            startActivity(leftSwipeViewFollowingIntent);
+
+                        }
+
+                        // if right to left sweep event on screen
+                        if (x1 > x2)
+                        {
+                            Toast.makeText(BarberActivity.this, "Right to Left Swap Performed", Toast.LENGTH_SHORT).show();
+                            Intent rightSwipeBarberProfileIntent = new Intent(getApplicationContext(),BarberProfileActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("barberObjectId",barberObject.getObjectId());
+                            rightSwipeBarberProfileIntent.putExtras(bundle);
+                            startActivity(rightSwipeBarberProfileIntent);
+                        }
+
+                        // if UP to Down sweep event on screen
+                        if (y1 < y2)
+                        {
+                            Toast.makeText(BarberActivity.this, "UP to Down Swap Performed", Toast.LENGTH_SHORT).show();
+                        }
+
+                        //if Down to UP sweep event on screen
+                        if (y1 > y2)
+                        {
+                            Toast.makeText(BarberActivity.this, "Down to UP Swap Performed", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    }
+                }
+                return true;
+            }
+        });
 
     }//End of onCreate
 
@@ -393,7 +485,7 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main,menu);
+        getMenuInflater().inflate(R.menu.message_menu,menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -402,6 +494,109 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.logOut_action){
                 logOut();
+        }
+        else if (item.getItemId() == R.id.check_messages_action) {
+            //Create the Dialog to view the messages
+            Log.i("checkMessagesCheck","Check messages icon has been pressed");
+
+            //Create first layer of dialog
+            AlertDialog.Builder viewMessagesBuilder = new AlertDialog.Builder(BarberActivity.this);
+            viewMessagesBuilder.setTitle("Messages");
+
+            arrayAdapter = new ArrayAdapter<String>(
+                    BarberActivity.this,
+                    android.R.layout.select_dialog_singlechoice, messagesReceiverUserNameList);
+        
+
+            viewMessagesBuilder.setNegativeButton("cancel",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            viewMessagesBuilder.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final String originalMessaSenderUserName = arrayAdapter.getItem(which);
+                            AlertDialog.Builder builderInnerViewMessage = new AlertDialog.Builder(
+                                    BarberActivity.this);
+                            //Get access to the message object and update that it has been saved
+                            messagesReceivedList.get(which).put("messageReadOrUnread",true);
+                            messagesReceivedList.get(which).saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if(e==null){
+                                        Log.i("readUpdate","Message has succesfully update to read");
+                                    }
+                                    else{
+                                        Log.i("readUpdate","Coulnt update message to read " + e.getMessage() );
+                                    }
+                                }
+                            });
+                            builderInnerViewMessage.setTitle("Your message from:" + originalMessaSenderUserName);
+                            builderInnerViewMessage.setMessage(messagesReceivedList.get(which).getString("messageContent"));
+                            //Need to get the senders userName
+                            builderInnerViewMessage.setPositiveButton("reply", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Log.i("messageClicked","position: "+ which);
+                                            //Create Alter view fro replying to message
+                                            AlertDialog.Builder builderInnerInnerReplyMessage = new AlertDialog.Builder(BarberActivity.this);
+                                            //Add senders userName
+                                            builderInnerInnerReplyMessage.setTitle("Reply to:" + originalMessaSenderUserName);
+                                            final EditText replyMessageEditText = new EditText(BarberActivity.this);
+                                            builderInnerInnerReplyMessage.setView(replyMessageEditText);
+                                            builderInnerInnerReplyMessage.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, final int which) {
+                                                  //Create the Message Object
+                                                    //Get the message from EditText
+                                                    String replyMessage = replyMessageEditText.getText().toString();
+                                                    ParseObject newMessageObject = new ParseObject("Messages");
+                                                    //Set the Acl for the object
+                                                    ParseACL defaultAcl = new ParseACL();
+                                                    defaultAcl.setPublicWriteAccess(true);
+                                                    defaultAcl.setPublicReadAccess(true);
+                                                    newMessageObject.setACL(defaultAcl);
+                                                    //Add data to the new message object
+                                                    newMessageObject.put("senderUserId",currentUser.getObjectId());
+                                                    newMessageObject.put("receiverUserId",messagesReceivedList.get(which+1).getString("senderUserId"));
+                                                    newMessageObject.put("senderUserName",currentUser.getUsername());
+                                                    //Should be the users userID
+                                                    newMessageObject.put("receiverUserName",messagesReceivedList.get(which + 1).getString("senderUserName"));
+                                                    newMessageObject.put("messageContent",replyMessage);
+                                                    newMessageObject.put("messageReadOrUnread", false);
+
+                                                    newMessageObject.saveInBackground(new SaveCallback() {
+                                                        @Override
+                                                        public void done(ParseException e) {
+                                                            if(e== null){
+                                                                Log.i("messageReplySent","Message was saved succesfully");
+                                                                Toast.makeText(getApplicationContext(),"Message was sent to: " + messagesReceivedList.get(which + 1).getString("senderUserId"),Toast.LENGTH_SHORT);
+                                                            }
+                                                            else{
+                                                                Log.i("messageReplySent","Error saving message"+ e.getMessage());
+                                                                Toast.makeText(getApplicationContext(),"Message was not able to send to: " + messagesReceivedList.get(which + 1).getString("senderUserId")+"\n" +"error is "+ e.getMessage(),Toast.LENGTH_SHORT);
+
+                                                            }
+                                                        }
+                                                    });//End of save in background
+                                                    
+                                                    Log.i("gotMessageTest", "This is the message form editText: " + replyMessage);
+                                                }
+                                            });//End of positive button
+                                            builderInnerInnerReplyMessage.show();
+                                        }
+                                    });
+
+
+                            builderInnerViewMessage.show();
+                        }
+                    });
+            viewMessagesBuilder.show();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -425,56 +620,8 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
     }
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
 
-        switch (event.getAction())
-        {
-            // when user first touches the screen we get x and y coordinate
-            case MotionEvent.ACTION_DOWN:
-            {
-                x1 = event.getX();
-                y1 = event.getY();
-                break;
-            }
-            case MotionEvent.ACTION_UP:
-            {
-                x2 = event.getX();
-                y2 = event.getY();
 
-                //if left to right sweep event on screen
-                if (x1 < x2)
-                {
-                    Toast.makeText(this, "Left to Right Swap Performed", Toast.LENGTH_SHORT).show();
-                    Intent leftSwipeViewFollowingIntent = new Intent(getApplicationContext(), ViewFollowingActivity.class);
-                    startActivity(leftSwipeViewFollowingIntent);
-
-                }
-
-                // if right to left sweep event on screen
-                if (x1 > x2)
-                {
-                    Toast.makeText(this, "Right to Left Swap Performed", Toast.LENGTH_SHORT).show();
-                    Intent rightSwipeBarberProfileIntent = new Intent(getApplicationContext(),BarberProfileActivity.class);
-                    startActivity(rightSwipeBarberProfileIntent);
-                }
-
-                // if UP to Down sweep event on screen
-                if (y1 < y2)
-                {
-                    Toast.makeText(this, "UP to Down Swap Performed", Toast.LENGTH_SHORT).show();
-                }
-
-                //if Down to UP sweep event on screen
-                if (y1 > y2)
-                {
-                    Toast.makeText(this, "Down to UP Swap Performed", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            }
-        }
-        return false;
-    }
 
  public String showDialog(){
      //Photo path from take picture dispath
@@ -594,6 +741,19 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
     }
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //Check if the user has the camera permission on if not request it
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.CAMERA}, 45);
+            Log.i("CameraPermissionCheck","Camera permission is not set");
+
+        }
+        //Check permissions to read and write
+        if(ActivityCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,new String []{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 14);
+            Log.i("WritePermissionCheck","Write permission is not set");
+
+        }
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
             File photoFile = null;
@@ -606,6 +766,7 @@ public class BarberActivity extends AppCompatActivity implements View.OnClickLis
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
+
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                         Uri.fromFile(photoFile));
 
