@@ -3,12 +3,21 @@
 
     <item
         is-multidex="false"
-        jar="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/jars/classes.jar"
+        jar="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="23.0.1"
-        sha1="de4db3785756bfb0915a9f59a9b3f2fea7407be4">
-        <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-23.4.0_e97152a7638e22abcdca17493d8e8dcba6cdc5fd.jar" />
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/com.android.support-support-v4-23.0.1_24ab950aeb903ecc05d2e42e0c349a26fa1d4010.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars/libs/internal_impl-23.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/internal_impl-23.0.1_10b784a4b006d35d1b8b2d0e95f55b42bb469a6a.jar" />
     </item>
     <item
         is-multidex="false"
@@ -48,15 +57,6 @@
     </item>
     <item
         is-multidex="false"
-        jar="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.1"
-        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
-        <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-23.4.0_66afeaccd41f7c6f579748f6baf2d9317ecfaeaf.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/jars/classes.jar"
         jumboMode="false"
         optimize="true"
@@ -66,12 +66,12 @@
     </item>
     <item
         is-multidex="false"
-        jar="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars/libs/internal_impl-23.4.0.jar"
+        jar="/Users/chris/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.1/support-annotations-23.0.1.jar"
         jumboMode="false"
         optimize="true"
         revision="23.0.1"
-        sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
-        <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/internal_impl-23.4.0_29ab1daa8b57db1a4e1e9de1b6a3133a88ffc55b.jar" />
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/support-annotations-23.0.1_ca90f26de1e279973ea1055e59b3a941ccec5c5d.jar" />
     </item>
     <item
         is-multidex="false"
@@ -84,30 +84,21 @@
     </item>
     <item
         is-multidex="false"
-        jar="/Users/chris/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.4.0/support-annotations-23.4.0.jar"
+        jar="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.0.1/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="23.0.1"
-        sha1="ffbe55fdb2bb456b1485831706a9eac3300bb6b8">
-        <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/support-annotations-23.4.0_ae2b3913259085abca657c12474f1c284fe264a8.jar" />
+        sha1="39ae02ce40c3ac828abbf780ce0ff5d7a28b7d6a">
+        <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/com.android.support-cardview-v7-23.0.1_9e054afd6457993d493eaa2dee75d02a876ba16c.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/jars/classes.jar"
+        jar="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="23.0.1"
-        sha1="548f06de403a9409f00554b3ee12a9fdea0e236c">
-        <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-23.4.0_65e8ceb720f0cdae0228a067843e5a399e93ec3e.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.1"
-        sha1="67bd36ee9340ec7c254108936ad16b24bed160cc">
-        <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/com.android.support-support-v4-23.4.0_1a48a05aca2611d0f4f7d09d10b3d06ed9476314.jar" />
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-23.0.1_4d192eba052adda5abe7b59ef12a464faec98ce2.jar" />
     </item>
     <item
         is-multidex="false"
@@ -117,6 +108,15 @@
         revision="23.0.1"
         sha1="9919563cffd8e3732e944d3c437d4b9575a08448">
         <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/com.google.firebase-firebase-common-9.0.2_6e7860debb12e1883d045697d0d1c7dd4326aa66.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.0.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="4356e230a981d1bbf047d848b91bc0d9b7c5bacc">
+        <dex dex="/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-23.0.1_e799e1c907096bf1905fdc3c0de370d8b9933224.jar" />
     </item>
 
 </items>

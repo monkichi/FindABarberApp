@@ -51,15 +51,14 @@ ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/
 		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:31:22-78
 application
 ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:33:5-78:19
-MERGED from [com.android.support:appcompat-v7:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:animated-vector-drawable:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/AndroidManifest.xml:7:5-20
-MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:7:5-20
+MERGED from [com.android.support:appcompat-v7:23.0.1] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services-maps:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.0.2/AndroidManifest.xml:27:5-20
 MERGED from [com.google.android.gms:play-services-base:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/AndroidManifest.xml:19:5-23:19
 MERGED from [com.google.firebase:firebase-common:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.0.2/AndroidManifest.xml:5:5-12:19
 MERGED from [com.google.android.gms:play-services-tasks:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.0.2/AndroidManifest.xml:5:5-20
 MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:20:5-24:19
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:cardview-v7:23.0.1] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.0.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.0.1] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/AndroidManifest.xml:22:5-20
 	android:label
 		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:37:9-41
 	android:allowBackup
@@ -140,17 +139,15 @@ ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/
 		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:77:19-63
 uses-sdk
 INJECTED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml reason: use-sdk injection requested
-MERGED from [com.android.support:appcompat-v7:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/AndroidManifest.xml:21:5-23:78
-MERGED from [com.android.support:animated-vector-drawable:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/AndroidManifest.xml:5:5-44
-MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:5:5-43
+MERGED from [com.android.support:appcompat-v7:23.0.1] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/AndroidManifest.xml:20:5-43
 MERGED from [com.google.android.gms:play-services-maps:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.0.2/AndroidManifest.xml:26:5-42
 MERGED from [com.google.android.gms:play-services-base:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/AndroidManifest.xml:18:5-42
 MERGED from [com.google.firebase:firebase-common:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.0.2/AndroidManifest.xml:4:5-43
 MERGED from [com.google.android.gms:play-services-tasks:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.0.2/AndroidManifest.xml:4:5-43
 MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:18:5-42
-MERGED from [com.android.support:support-v4:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
-	tools:overrideLibrary
-		ADDED from [com.android.support:appcompat-v7:23.4.0] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/AndroidManifest.xml:23:9-75
+MERGED from [com.android.support:cardview-v7:23.0.1] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.0.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:recyclerview-v7:23.0.1] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.0.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.0.1] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/AndroidManifest.xml:20:5-43
 	android:targetSdkVersion
 		INJECTED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml
 		INJECTED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml

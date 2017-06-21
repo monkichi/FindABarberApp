@@ -1,5 +1,7 @@
 package com.parse.starter;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v4.view.MotionEventCompat;
@@ -8,17 +10,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.GetCallback;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +38,11 @@ public class ViewFollowersActivity extends AppCompatActivity {
     List<FollowerInfo> followerInfoList;
     //Create the listview
     ListView followersListView;
+    //Create following you banner
     TextView followersTextView;
+    //Create sendMessageImageView
+
+
     ParseUser currentUser;
     private int i;
     RelativeLayout viewFollowersActivityLayout;
@@ -52,8 +63,94 @@ public class ViewFollowersActivity extends AppCompatActivity {
         followersTextView = (TextView) findViewById(R.id.followingYouTextView);
         followersListView = (ListView) findViewById(R.id.followersListView);
 
+
         currentUser = ParseUser.getCurrentUser();
         getFollowers();
+
+
+        followersListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                Log.i("Long press test", "Long press detected");
+
+                AlertDialog.Builder viewMessagesBuilder = new AlertDialog.Builder(ViewFollowersActivity.this);
+                viewMessagesBuilder.setTitle("View Messages");
+
+                viewMessagesBuilder.setNegativeButton(
+                        "cancel",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+//           /*
+//              Send Current User Profile a New Message Code
+//          */
+
+                viewMessagesBuilder.setPositiveButton("New Message", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Create Alter view fro replying to message
+                        AlertDialog.Builder builderInnerInnerSendMessage = new AlertDialog.Builder(ViewFollowersActivity.this);
+
+                        //Add the users object to send message to user
+                        builderInnerInnerSendMessage.setTitle("Send Message to:" + followerInfoList.get(position).followerUserName);
+                        //Message text box
+                        final EditText replyMessageEditText = new EditText(ViewFollowersActivity.this);
+                        //Set the message text box to the new message dialog
+                        builderInnerInnerSendMessage.setView(replyMessageEditText);
+                        //Add send button to new message dialog
+                        builderInnerInnerSendMessage.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Get the message from EditText
+                                String replyMessage = replyMessageEditText.getText().toString();
+                                Log.i("gotMessageTest", "This is the message form editText: " + replyMessage);
+                                //Create the Message Object
+                                ParseObject newMessageObject = new ParseObject("Messages");
+                                //Set the Acl for the object
+                                ParseACL defaultAcl = new ParseACL();
+                                defaultAcl.setPublicWriteAccess(true);
+                                defaultAcl.setPublicReadAccess(true);
+                                newMessageObject.setACL(defaultAcl);
+                                //Store the senders UserID data as the current barbers user since we are sending the message
+                                newMessageObject.put("senderUserId",currentUser.getObjectId());
+                                newMessageObject.put("senderUserName",currentUser.getUsername());
+                                //Should be the user we want to send message to
+                                newMessageObject.put("receiverUserId",followerInfoList.get(position).getFollowerUserId());
+                                newMessageObject.put("receiverUserName",followerInfoList.get(position).getFollowerUserName());
+                                newMessageObject.put("messageContent",replyMessage);
+                                newMessageObject.put("messageReadOrUnread",false);
+                                //Send message to database
+                                newMessageObject.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if(e== null){
+                                            Log.i("messageReplySent","Message was saved succesfully");
+                                            Toast.makeText(ViewFollowersActivity.this,"Message was sent to: " + followerInfoList.get(position).followerUserName,Toast.LENGTH_SHORT).show();
+                                        }
+                                        else{
+                                            Log.i("messageReplySent","Error saving message"+ e.getMessage());
+                                            Toast.makeText(ViewFollowersActivity.this,"Message was not able to send to: " + followerInfoList.get(position).followerUserName +"\n" +"error is "+ e.getMessage(),Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+                                });
+
+                            }
+                        });
+                        builderInnerInnerSendMessage.show();
+                    }
+                });
+                viewMessagesBuilder.show();
+
+                return true;
+            }
+        });
 
         viewFollowersActivityLayout = (RelativeLayout) findViewById(R.id.viewFollowersActivityLayout);
         viewFollowersActivityLayout.setOnTouchListener(new View.OnTouchListener() {

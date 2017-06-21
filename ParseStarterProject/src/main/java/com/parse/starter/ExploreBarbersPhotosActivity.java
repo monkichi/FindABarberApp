@@ -1,10 +1,14 @@
 package com.parse.starter;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -16,6 +20,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -35,26 +40,72 @@ public class ExploreBarbersPhotosActivity extends AppCompatActivity {
     private List<ParseObject> nearbyBarberObjestList;
     private ParseQuery<ParseObject> nearestBarbersQuery;
     private ParseQuery<ParseObject> nearestBarberImagesQuery;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.explore_barber_photos_layout);
+        setContentView(R.layout.recyclerview);
 
-        //Set up Grid View
-        GridView gridview = (GridView) findViewById(R.id.gridview);
-        if (gridview != null) {
-            gridview.setAdapter(new ImageAdapter(this));
-            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    Toast.makeText(ExploreBarbersPhotosActivity.this, "" + position,
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
+//        //Set up Grid View
+//        GridView gridview = (GridView) findViewById(R.id.gridview);
+//        if (gridview != null) {
+//            gridview.setAdapter(new ImageAdapter(this));
+//            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+//                    Toast.makeText(ExploreBarbersPhotosActivity.this, "" + position,
+//                            Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
+
+
+
+        /*
+            Code for Scrollable GridView
+        * */
+
+        recyclerView = (RecyclerView)
+                findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+
+        //recyclerView.setLayoutManager(new LinearLayoutManager(ExploreBarbersPhotosActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView
+                .setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));// Here 2 is no. of columns to be displayed
+
+        // populate the list view by adding data to arraylist
+        populatRecyclerView();
+
+        //getExploreBarberImages();
+
+
+    }
+
+    // references to our images
+    private Integer[] mThumbIds = {
+            R.drawable.sample_2, R.drawable.sample_3,
+            R.drawable.sample_4, R.drawable.sample_5,
+            R.drawable.sample_6, R.drawable.sample_7,
+            R.drawable.sample_0, R.drawable.sample_1,
+            R.drawable.sample_2, R.drawable.sample_3,
+            R.drawable.sample_4, R.drawable.sample_5,
+            R.drawable.sample_6, R.drawable.sample_7,
+            R.drawable.sample_0, R.drawable.sample_1,
+            R.drawable.sample_2, R.drawable.sample_3,
+            R.drawable.sample_4, R.drawable.sample_5,
+            R.drawable.sample_6, R.drawable.sample_7
+    };
+
+
+    // populate the list view by adding data to arraylist
+    private void populatRecyclerView() {
+        ArrayList<ExploreBarbersImagesDataModel> arrayList = new ArrayList<>();
+        for (int i = 0; i < mThumbIds.length; i++) {
+            arrayList.add(new ExploreBarbersImagesDataModel("Yo",mThumbIds[i]));
         }
-
-        getExploreBarberImages();
-
+        RecyclerView_Adapter  adapter = new RecyclerView_Adapter(ExploreBarbersPhotosActivity.this, arrayList);
+        recyclerView.setAdapter(adapter);// set adapter on recyclerview
+        adapter.notifyDataSetChanged();// Notify the adapter
 
     }
 
@@ -84,7 +135,7 @@ public class ExploreBarbersPhotosActivity extends AppCompatActivity {
                                 public void done(List<ParseObject> objects, ParseException e) {
                                     if (e == null){
                                         if (objects.size() > 0){
-                                            Log.i("nearbyImagesTest" , "Found Image Objects");
+
 
                                         }
                                         else{
