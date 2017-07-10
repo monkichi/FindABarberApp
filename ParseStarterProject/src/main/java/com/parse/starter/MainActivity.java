@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                                 + user.getString("barberOrUser"));
                                 if(user.getString("barberOrUser").equals("barber")){
 
-                                    Intent barberActivityIntent = new Intent(getApplicationContext(),BarberActivity.class);
+                                    Intent barberActivityIntent = new Intent(getApplicationContext(),BarberMainActivity.class);
                                     startActivity(barberActivityIntent);
                                 }
                                 else{
@@ -137,7 +137,9 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"You touched outside the keyboard",Toast.LENGTH_LONG).show();
                 }
             });
+
             loginButtonListener();
+
             signUpButtonListener();
             //Check if user is logged int
             ParseUser  currentUser = ParseUser.getCurrentUser();
@@ -146,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 barberOrUser = currentUser.getString("barberOrUser");
                 if (barberOrUser != null){
                     if(barberOrUser.equals("barber")){
-                        Intent barberActityintent = new Intent(getApplicationContext(),BarberActivity.class);
+                        Intent barberActityintent = new Intent(getApplicationContext(),BarberMainActivity.class);
                         startActivity(barberActityintent);
                     }
                     else{

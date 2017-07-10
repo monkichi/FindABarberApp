@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.parse.ParseACL;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -53,9 +54,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_layout);
-        Toolbar actionToolbar = (Toolbar) findViewById(R.id.my_toolbar);
 
-        setSupportActionBar(actionToolbar);
         passwordEditText = (EditText) findViewById(R.id.signUpPasswordEditText);
         userUserNameEditText = (EditText) findViewById(R.id.signUpUserNameEditText);
         userEmailEditText = (EditText) findViewById(R.id.signUpEmailEditText);
@@ -105,7 +104,8 @@ public class SignUpActivity extends AppCompatActivity {
                         public void done(ParseException e) {
                             if (e == null) {
                                 Log.i("Parse Info", "Sign up was successful");
-                                //Create the imageObject for the user
+                                //Create the list of  imageObject for the user
+                                ArrayList<ParseFile> imagesList = new ArrayList<ParseFile>();
                                 ParseObject userImages = new ParseObject("Images");
                                 ParseACL imagesAcl = new ParseACL();
                                 imagesAcl.setPublicReadAccess(true);
@@ -113,6 +113,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 userImages.setACL(imagesAcl);
                                 //Set the Image objects look up key
                                 userImages.put("UserObjectId",user.getObjectId());
+                                userImages.put("ImagesFileList",imagesList);
                                 userImages.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
@@ -170,7 +171,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         }
                                     });
 
-                                    Intent userActivityIntent = new Intent(getApplicationContext(), BarberActivity.class);
+                                    Intent userActivityIntent = new Intent(getApplicationContext(), BarberMainActivity.class);
                                     startActivity(userActivityIntent);
                                 }
                                 else{

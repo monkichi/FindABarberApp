@@ -1,5 +1,7 @@
 package com.parse.starter;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by chris on 6/18/17.
  */
@@ -7,21 +9,21 @@ package com.parse.starter;
 public class ExploreBarbersImagesDataModel {
 
     // Getter and Setter model for recycler view items
-    private String title;
-    private int image;
+    private String barberUserID;
+    private Bitmap image;
 
-    public ExploreBarbersImagesDataModel(String title,  int image) {
+    public ExploreBarbersImagesDataModel(String title,  Bitmap image) {
 
-        this.title = title;
+        this.barberUserID = title;
 
         this.image = image;
     }
 
-    public String getTitle() {
-        return title;
+    public String getBarberUserID() {
+        return barberUserID;
     }
 
-    public int getImage() {
+    public Bitmap getImage() {
         return image;
     }
 

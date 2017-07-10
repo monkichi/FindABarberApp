@@ -1,6 +1,7 @@
 package com.parse.starter;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -26,6 +28,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,85 +40,110 @@ public class ExploreBarbersPhotosActivity extends AppCompatActivity {
     private float y1;
     private float x2;
     private float y2;
-    private List<ParseObject> nearbyBarberObjestList;
+    private List<ParseObject> nearbyBarberObjectsList;
     private ParseQuery<ParseObject> nearestBarbersQuery;
     private ParseQuery<ParseObject> nearestBarberImagesQuery;
     private RecyclerView recyclerView;
+    private ArrayList<ExploreBarbersImagesDataModel> exploreBarberImagesRandomList;
+    private List<ParseFile> currentBarberImageList;
+    private ExploreBarberWorkImagesAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recyclerview);
 
-//        //Set up Grid View
-//        GridView gridview = (GridView) findViewById(R.id.gridview);
-//        if (gridview != null) {
-//            gridview.setAdapter(new ImageAdapter(this));
-//            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//                    Toast.makeText(ExploreBarbersPhotosActivity.this, "" + position,
-//                            Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-
-
 
         /*
-            Code for Scrollable GridView
+            Code for Scrollable Recycler View
         * */
 
         recyclerView = (RecyclerView)
                 findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
 
-        //recyclerView.setLayoutManager(new LinearLayoutManager(ExploreBarbersPhotosActivity.this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView
-                .setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));// Here 2 is no. of columns to be displayed
+//        recyclerView.setLayoutManager(new LinearLayoutManager(ExploreBarbersPhotosActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));// Here 2 is no. of columns to be displayed
+
+
+
+        //Add click interface for RecyclerView
+        ItemClickSupport.addTo(recyclerView)
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        // do it
+                        Toast.makeText(getApplicationContext(), "Item # " + position + "BarberUserId" + exploreBarberImagesRandomList.get(position).getBarberUserID() , Toast.LENGTH_SHORT).show();
+
+                        //get the clicked items barberUserId
+                        String barberUserId = exploreBarberImagesRandomList.get(position).getBarberUserID();
+
+                        //Create intent to start BarberProfileActivity
+                        Intent goToBarberProfileIntent = new Intent(getApplicationContext(), BarberProfileActivity.class);
+                        //Bundle the data to send to BarberProfileActivity
+                        Bundle bundle = new Bundle();
+                        bundle.putString("barberObjectId",barberUserId);
+                        goToBarberProfileIntent.putExtras(bundle);
+                        //call method to start the new activity
+                        startActivity(goToBarberProfileIntent);
+                    }
+                });
 
         // populate the list view by adding data to arraylist
-        populatRecyclerView();
-
-        //getExploreBarberImages();
+        //populatRecyclerView();
 
 
-    }
+        //list to hold all images of random barbers
+        exploreBarberImagesRandomList = new ArrayList<ExploreBarbersImagesDataModel>();
+        currentBarberImageList = new ArrayList<ParseFile>();
 
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7
-    };
-
-
-    // populate the list view by adding data to arraylist
-    private void populatRecyclerView() {
-        ArrayList<ExploreBarbersImagesDataModel> arrayList = new ArrayList<>();
-        for (int i = 0; i < mThumbIds.length; i++) {
-            arrayList.add(new ExploreBarbersImagesDataModel("Yo",mThumbIds[i]));
-        }
-        RecyclerView_Adapter  adapter = new RecyclerView_Adapter(ExploreBarbersPhotosActivity.this, arrayList);
+        adapter = new ExploreBarberWorkImagesAdapter(ExploreBarbersPhotosActivity.this,  exploreBarberImagesRandomList);
         recyclerView.setAdapter(adapter);// set adapter on recyclerview
-        adapter.notifyDataSetChanged();// Notify the adapter
+
+
+        //Call method to get all the images for this explore barber work images activity in backgroud
+        getExploreBarberImages();
+
+
 
     }
+
+//    // references to our images
+//    private Integer[] mThumbIds = {
+//            R.drawable.sample_2, R.drawable.sample_3,
+//            R.drawable.sample_4, R.drawable.sample_5,
+//            R.drawable.sample_6, R.drawable.sample_7,
+//            R.drawable.sample_0, R.drawable.sample_1,
+//            R.drawable.sample_2, R.drawable.sample_3,
+//            R.drawable.sample_4, R.drawable.sample_5,
+//            R.drawable.sample_6, R.drawable.sample_7,
+//            R.drawable.sample_0, R.drawable.sample_1,
+//            R.drawable.sample_2, R.drawable.sample_3,
+//            R.drawable.sample_4, R.drawable.sample_5,
+//            R.drawable.sample_6, R.drawable.sample_7
+//    };
+
+//
+//    // populate the list view by adding data to arraylist
+//    private void populatRecyclerView() {
+//        ArrayList<ExploreBarbersImagesDataModel> arrayList = new ArrayList<>();
+//        for (int i = 0; i < mThumbIds.length; i++) {
+//            arrayList.add(new ExploreBarbersImagesDataModel("Yo",mThumbIds[i]));
+//        }
+//        RecyclerView_Adapter  adapter = new RecyclerView_Adapter(ExploreBarbersPhotosActivity.this, arrayList);
+//        recyclerView.setAdapter(adapter);// set adapter on recyclerview
+//        adapter.notifyDataSetChanged();// Notify the adapter
+//
+//    }
 
 
     private void getExploreBarberImages(){
-        //Query barbers around the lates position
-            // get latest position
-       nearbyBarberObjestList = new ArrayList<>();
-            LatLng usersLastPositionLatLng = new LatLng(getIntent().getExtras().getDouble("latitude"), getIntent().getExtras().getDouble("longitude"));
-            //query from lates postion
+        //Query barbers around the latest position
+       //list of barberObjects for information purposes
+        nearbyBarberObjectsList = new ArrayList<>();
+        // get latest position
+        LatLng usersLastPositionLatLng = new LatLng(getIntent().getExtras().getDouble("latitude"), getIntent().getExtras().getDouble("longitude"));
+            //query from users latest postion nearby
         nearestBarbersQuery = ParseQuery.getQuery("Barbers");
         nearestBarbersQuery.whereNear("barberAddress",new ParseGeoPoint(usersLastPositionLatLng.latitude,usersLastPositionLatLng.longitude));
         //Set limit of items returned near by
@@ -125,30 +153,53 @@ public class ExploreBarbersPhotosActivity extends AppCompatActivity {
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null ){
                     if (objects.size() > 0){
-                        nearbyBarberObjestList = objects;
-                        Log.i("nearbyBarberImagesTest", "Got Barber Object");
-                        for (ParseObject barbers : nearbyBarberObjestList ) {
+                        nearbyBarberObjectsList = objects;
+                        Log.i("nearbyBarberImagesTest", "Got Barber Objects : " + nearbyBarberObjectsList.size());
+                        for (ParseObject barbers : nearbyBarberObjectsList ) {
                             nearestBarberImagesQuery = ParseQuery.getQuery("Images");
                             nearestBarberImagesQuery.whereEqualTo("UserObjectId",barbers.get("barberUserId"));
-                            nearestBarberImagesQuery.findInBackground(new FindCallback<ParseObject>() {
+                            nearestBarberImagesQuery.getFirstInBackground(new GetCallback<ParseObject>() {
                                 @Override
-                                public void done(List<ParseObject> objects, ParseException e) {
-                                    if (e == null){
-                                        if (objects.size() > 0){
+                                public void done(ParseObject object, ParseException e) {
+                                    if (e == null) {
+                                        //get image list for current barber
+                                        currentBarberImageList = object.getList("ImagesFileList");
+                                        //iterate through all images from current barber into ExploreBarberImageList
+                                        if (currentBarberImageList != null && currentBarberImageList.size() > 0) {
+                                            Log.i("nearbyBarberImagesTest", "Got Barber Images : " + currentBarberImageList.size());
+                                            for (ParseFile workImage : currentBarberImageList) {
+                                                byte[] barberWorkImageByteArray;
+                                                if (workImage != null) {
+                                                    try {
+                                                        barberWorkImageByteArray = workImage.getData();
+                                                        ExploreBarbersImagesDataModel model = new ExploreBarbersImagesDataModel(object.getString("UserObjectId"),BitmapFactory.decodeByteArray(barberWorkImageByteArray, 0, barberWorkImageByteArray.length));
+                                                        exploreBarberImagesRandomList.add(model);
+                                                        //All Nearest Barbers Images should be in exploreBarberImagesRandomList
+                                                        Log.i("nearbyBarberImagesTest", "BarberWorkImagesAdapter size : " + exploreBarberImagesRandomList.size());
+                                                        Collections.shuffle(exploreBarberImagesRandomList);
+                                                        adapter.notifyDataSetChanged();// Notify the adapter\
+                                                    } catch (ParseException e1) {
+                                                        e1.printStackTrace();
+                                                    }
+                                                }
 
+                                            }
 
                                         }
+                                        //Condition when currentBarberImageList
+                                        else{
+                                            Log.i("nearbyBarberImagesTest", "Barber has no images in his list : "  );
+
+                                        }
+                                    }
                                         else{
                                             Log.i("foundNearbyTest", "Zero Image Objests from query");
                                         }
                                     }
-                                    else{
-                                        Log.e("nearbyImagesTest", "Got no Images " + e.toString());
-                                    }
-                                }
                             });
 
                         }
+
                     }
                     else{
                         Log.i("Barber Query", "No data objects returned size : " + objects.size());
@@ -157,63 +208,105 @@ public class ExploreBarbersPhotosActivity extends AppCompatActivity {
             }
         });
 
+    }//End of getBarberImages method
 
+
+
+}//End of ExploreBarbersPhotosActivity
+
+ class ItemClickSupport {
+    private final RecyclerView mRecyclerView;
+    private OnItemClickListener mOnItemClickListener;
+    private OnItemLongClickListener mOnItemLongClickListener;
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mOnItemClickListener != null) {
+                // ask the RecyclerView for the viewHolder of this view.
+                // then use it to get the position for the adapter
+                RecyclerView.ViewHolder holder = mRecyclerView.getChildViewHolder(v);
+                mOnItemClickListener.onItemClicked(mRecyclerView, holder.getAdapterPosition(), v);
+            }
+        }
+    };
+    private View.OnLongClickListener mOnLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            if (mOnItemLongClickListener != null) {
+                RecyclerView.ViewHolder holder = mRecyclerView.getChildViewHolder(v);
+                return mOnItemLongClickListener.onItemLongClicked(mRecyclerView, holder.getAdapterPosition(), v);
+            }
+            return false;
+        }
+    };
+    private RecyclerView.OnChildAttachStateChangeListener mAttachListener
+            = new RecyclerView.OnChildAttachStateChangeListener() {
+        @Override
+        public void onChildViewAttachedToWindow(View view) {
+            // every time a new child view is attached add click listeners to it
+            if (mOnItemClickListener != null) {
+                view.setOnClickListener(mOnClickListener);
+            }
+            if (mOnItemLongClickListener != null) {
+                view.setOnLongClickListener(mOnLongClickListener);
+            }
+        }
+
+        @Override
+        public void onChildViewDetachedFromWindow(View view) {
+
+        }
+    };
+
+    private ItemClickSupport(RecyclerView recyclerView) {
+        mRecyclerView = recyclerView;
+        // the ID must be declared in XML, used to avoid
+        // replacing the ItemClickSupport without removing
+        // the old one from the RecyclerView
+        mRecyclerView.setTag(R.id.item_click_support, this);
+        mRecyclerView.addOnChildAttachStateChangeListener(mAttachListener);
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+    public static ItemClickSupport addTo(RecyclerView view) {
+        // if there's already an ItemClickSupport attached
+        // to this RecyclerView do not replace it, use it
+        ItemClickSupport support = (ItemClickSupport) view.getTag(R.id.item_click_support);
+        if (support == null) {
+            support = new ItemClickSupport(view);
+        }
+        return support;
     }
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        switch (event.getAction())
-//        {
-//            // when user first touches the screen we get x and y coordinate
-//            case MotionEvent.ACTION_DOWN:
-//
-//            {
-//                x1 = event.getX();
-//                y1 = event.getY();
-//                break;
-//            }
-//            case MotionEvent.ACTION_UP:
-//            {
-//                x2 = event.getX();
-//                y2 = event.getY();
-//
-//                //if left to right sweep event on screen
-//                if (x1 < x2)
-//                {
-//                    Toast.makeText(this, "Left to Right Swap Performed", Toast.LENGTH_SHORT).show();
-//                    Intent rightSwipeViewFollowingIntent = new Intent(getApplicationContext(),UserMapsActivity.class);
-//                    startActivity(rightSwipeViewFollowingIntent);
-//                }
-//
-//                // if right to left sweep event on screen
-//                if (x1 > x2)
-//                {
-//                    Toast.makeText(this, "Right to Left Swap Performed", Toast.LENGTH_SHORT).show();
-//
-//
-//                }
-//
-//                // if UP to Down sweep event on screen
-//                if (y1 < y2)
-//                {
-//                    Toast.makeText(this, "UP to Down Swap Performed", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                //if Down to UP sweep event on screen
-//                if (y1 > y2)
-//                {
-//                    Toast.makeText(this, "Down to UP Swap Performed", Toast.LENGTH_SHORT).show();
-//                }
-//                break;
-//            }
-//        }
-//        return false;
-//    }
+    public static ItemClickSupport removeFrom(RecyclerView view) {
+        ItemClickSupport support = (ItemClickSupport) view.getTag(R.id.item_click_support);
+        if (support != null) {
+            support.detach(view);
+        }
+        return support;
+    }
 
+    public ItemClickSupport setOnItemClickListener(OnItemClickListener listener) {
+        mOnItemClickListener = listener;
+        return this;
+    }
+
+    public ItemClickSupport setOnItemLongClickListener(OnItemLongClickListener listener) {
+        mOnItemLongClickListener = listener;
+        return this;
+    }
+
+    private void detach(RecyclerView view) {
+        view.removeOnChildAttachStateChangeListener(mAttachListener);
+        view.setTag(R.id.item_click_support, null);
+    }
+
+    public interface OnItemClickListener {
+
+        void onItemClicked(RecyclerView recyclerView, int position, View v);
+    }
+
+    public interface OnItemLongClickListener {
+
+        boolean onItemLongClicked(RecyclerView recyclerView, int position, View v);
+    }
 }

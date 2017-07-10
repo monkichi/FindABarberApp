@@ -3,11 +3,14 @@ package com.parse.starter;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -44,10 +47,11 @@ public class BarberProfileActivity extends AppCompatActivity {
 
     TextView barberNameTextView;
     TextView barberAboutTextView;
-    ImageView barberProfileImageView, barberWorkImageView1, barberWorkImageView2,
-    barberWorkImageView3,barberWorkImageView4,barberWorkImageView5,barberWorkImageView6;
+    ImageView barberProfileImageView;
+
     Button followButton;
     Boolean isFollowing = false;
+
     //To display the barbers info
     ParseObject barberObject;
     private float x1,x2;
@@ -65,31 +69,43 @@ public class BarberProfileActivity extends AppCompatActivity {
     //List to store the barberMessageObjects for messagesListView
     List<ParseObject> barberMessagesObjectsList;
 
+    List<ParseFile> barberWorkImagesFileList;
+    ArrayList<Bitmap> barberWorkImagesBitmapList;
+    private RecyclerView recyclerView;
+    private BarberWorkImagesAdapter adapter;    //Adapter for default images
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Set view
         setContentView(R.layout.barber_profile_layout);
+
+        //Set up Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
+
+        //Inflate barber Info views
         barberNameTextView = (TextView) findViewById(R.id.barberNameTextView);
         barberAboutTextView =(TextView) findViewById(R.id.aboutBarberTextView);
         barberProfileImageView =(ImageView) findViewById(R.id.barberImageView);
-        barberWorkImageView1 =(ImageView) findViewById(R.id.barberImageView1);
-        barberWorkImageView2 =(ImageView) findViewById(R.id.barberImageView2);
-        barberWorkImageView3 =(ImageView) findViewById(R.id.barberImageView3);
-        barberWorkImageView4 =(ImageView) findViewById(R.id.barberImageView4);
-        barberWorkImageView5 =(ImageView) findViewById(R.id.barberImageView5);
-        barberWorkImageView6 =(ImageView) findViewById(R.id.barberImageView6);
+
+        //Inflate follow button
         followButton =(Button) findViewById(R.id.followUnfollowButton);
 
+        //List for messages
         barberMessagesObjectsList =new ArrayList<ParseObject>();
         barberMessagesUserNamesList = new ArrayList<String>();
+
+        //Instantiate array list for barberWorkImages
+        barberWorkImagesFileList = new ArrayList<ParseFile>();
+        barberWorkImagesBitmapList = new ArrayList<Bitmap>();
 
         //Store current Log in user for easy access
         currentUser = ParseUser.getCurrentUser();
         //Get the userObjectId for the current user
         currentUserId = currentUser.getObjectId();
-        //Get the bundle from
+
+        //Get the bundle from barber activity
         Bundle bundle = getIntent().getExtras();
         //Extract the barberObjectId
         final String barberId = bundle.getString("barberObjectId");
@@ -104,7 +120,7 @@ public class BarberProfileActivity extends AppCompatActivity {
                 if (e == null) {
                     if(object != null){
                         Log.e("profileBarTest","Query was succesful" + object.getString("barberName"));
-                       barberObject = object;
+                        barberObject = object;
                         barberNameTextView.setText(object.getString("barberName") +"\n" +
                         object.getString("barberPlaceName"));
                         barberAboutTextView.setText(object.getString("barberAboutText"));
@@ -121,6 +137,8 @@ public class BarberProfileActivity extends AppCompatActivity {
                                 isFollowing = false;
                                 followButton.setText("Follow");
                             }
+
+                            //Logic for unfollow/follow button
                             followButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -183,106 +201,9 @@ public class BarberProfileActivity extends AppCompatActivity {
                             followButton.setVisibility(View.INVISIBLE);
                         }
 
-                        ParseQuery<ParseObject> barberFollowersQuery = ParseQuery.getQuery("Followers");
-                        barberFollowersQuery.whereEqualTo("followerUserId",barberUserId);
-                        barberFollowersQuery.getFirstInBackground(new GetCallback<ParseObject>() {
-                            @Override
-                            public void done(ParseObject object, ParseException e) {
-                                if(e == null){
-                                    Log.i("FollowersQuery", "Followers Query was successful");
-                                    //Store barberFollower Object
-                                    barberFollowerObject = object;
-                                    //Query the messages objects for messages for currentUserID
-                                    final ParseQuery<ParseObject> currentUserMessagesQuery = new ParseQuery<ParseObject>("Messages");
-                                    currentUserMessagesQuery.whereEqualTo("receiverUserId", currentUserId);
-                                    currentUserMessagesQuery.findInBackground(new FindCallback<ParseObject>() {
-                                        @Override
-                                        public void done(List<ParseObject> objects, ParseException e) {
-                                            if (e==null){
-                                                if (objects.size()>0){
-                                                    Log.i("currentUserMessages","Messages Query was succesful");
-                                                    for (ParseObject message: objects)
-                                                    {
-                                                        //Add the messages for currentUser to list
-                                                        barberMessagesObjectsList.add(message);
-                                                        //Add the messages sender userId to list
-                                                        barberMessagesUserNamesList.add(message.getString("senderUserName"));
+                        getBarberFollewersFromDB();
 
-                                                    }
-                                                }
-                                            }
-                                            else{
-                                                Log.i("currentUserMessages","Error getting messages for: " + currentUserId +  " error is " + e.getMessage());
-                                            }
-                                        }
-                                    });
-                                }
-                                else{
-                                    Log.i("FollowersQuery","Error getting query " + e.getMessage());
-                                }
-                            }
-                        });
-
-                        //Query all the photos
-                        ParseQuery<ParseObject> barberProfileImagesQuery = ParseQuery.getQuery("Images");
-                        barberProfileImagesQuery.whereEqualTo("UserObjectId",barberUserId);
-                        barberProfileImagesQuery.getFirstInBackground(new GetCallback<ParseObject>() {
-                            @Override
-                            public void done(ParseObject object, ParseException e) {
-                                if (e == null) {
-                                    Log.i("barberImagesTest", "Query for barber images was sucessful");
-                                    try {
-                                        ParseFile profileImageFile = object.getParseFile("ProfileImageFile");
-                                        byte[] profileImageByteArray = new byte[0];
-                                        if (profileImageFile != null) {
-                                            profileImageByteArray = profileImageFile.getData();
-                                            barberProfileImageView.setImageBitmap(BitmapFactory.decodeByteArray(profileImageByteArray, 0, profileImageByteArray.length));
-                                        }
-                                        ParseFile imageView1File = object.getParseFile("ImageView1File");
-                                        byte[] imageView1ByteArray = new byte[0];
-                                        if (imageView1File != null) {
-                                            imageView1ByteArray = imageView1File.getData();
-                                            barberWorkImageView1.setImageBitmap(BitmapFactory.decodeByteArray(imageView1ByteArray, 0, imageView1ByteArray.length));
-                                        }
-                                        ParseFile imageView2File = object.getParseFile("ImageView2File");
-                                        byte[] imageView2ByteArray = new byte[0];
-                                        if (imageView2File != null) {
-                                            imageView2ByteArray = imageView2File.getData();
-                                            barberWorkImageView2.setImageBitmap(BitmapFactory.decodeByteArray(imageView2ByteArray, 0, imageView2ByteArray.length));
-                                        }
-                                        ParseFile imageView3File = object.getParseFile("ImageView3File");
-                                        byte[] imageView3ByteArray = new byte[0];
-                                        if (imageView3File != null) {
-                                            imageView3ByteArray = imageView3File.getData();
-                                            barberWorkImageView3.setImageBitmap(BitmapFactory.decodeByteArray(imageView3ByteArray, 0, imageView3ByteArray.length));
-                                        }
-                                        ParseFile imageView4File = object.getParseFile("ImageView4File");
-                                        byte[] imageView4ByteArray = new byte[0];
-                                        if (imageView4File != null) {
-                                            imageView4ByteArray = imageView4File.getData();
-                                            barberWorkImageView4.setImageBitmap(BitmapFactory.decodeByteArray(imageView4ByteArray, 0, imageView4ByteArray.length));
-                                        }
-                                        ParseFile imageView5File = object.getParseFile("ImageView5File");
-                                        byte[] imageView5ByteArray = new byte[0];
-                                        if (imageView5File != null) {
-                                            imageView5ByteArray = imageView5File.getData();
-                                            barberWorkImageView5.setImageBitmap(BitmapFactory.decodeByteArray(imageView5ByteArray, 0, imageView5ByteArray.length));
-                                        }
-                                        ParseFile imageView6File = object.getParseFile("ImageView6File");
-                                        byte[] imageView6ByteArray = new byte[0];
-                                        if (imageView1File != null) {
-                                            imageView6ByteArray = imageView6File.getData();
-                                            barberWorkImageView6.setImageBitmap(BitmapFactory.decodeByteArray(imageView6ByteArray, 0, imageView6ByteArray.length));
-                                        }
-
-                                    } catch (ParseException e1) {
-                                        e1.printStackTrace();
-                                    }
-                                } else {
-                                    Log.i("barberImagesTest", "There was an error getting barberImages with "+ barberUserId+" " + e.getMessage());
-                                }
-                            }
-                        });
+                        getBarberImagesFromDB();
 
                     }
                     else{
@@ -295,15 +216,124 @@ public class BarberProfileActivity extends AppCompatActivity {
             }
         });
 
+        //Set up Grid view of the barbers work Images
+        recyclerView = (RecyclerView) findViewById(R.id.barber_work_images_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(BarberProfileActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction())
+                {
+                    // when user first touches the screen we get x and y coordinate
+                    case MotionEvent.ACTION_DOWN:
+                    {
+                        x1 = event.getX();
+                        y1 = event.getY();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP:
+                    {
+                        x2 = event.getX();
+                        y2 = event.getY();
 
+                        //if left to right sweep event on screen
+                        if (x1 < x2)
+                        {
+                            Toast.makeText(BarberProfileActivity.this, "Left to Right Swap Performed", Toast.LENGTH_SHORT).show();
+
+                            if (currentUser.getString("barberOrUser").equals("barber")) {
+                                Intent leftSwipeBarberActivityIntent = new Intent(getApplicationContext(),BarberMainActivity.class);
+                                startActivity(leftSwipeBarberActivityIntent);
+                            }
+                            else{
+                                Intent leftSwipeBarberActivityIntent = new Intent(getApplicationContext(),UserMapsActivity.class);
+                                startActivity(leftSwipeBarberActivityIntent);
+                            }
+
+
+                        }
+
+                        // if right to left sweep event on screen
+                        if (x1 > x2)
+                        {
+
+                            Toast.makeText(BarberProfileActivity.this, "Right to Left Swap Performed", Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        // if UP to Down sweep event on screen
+                        if (y1 < y2)
+                        {
+                            Toast.makeText(BarberProfileActivity.this, "UP to Down Swap Performed", Toast.LENGTH_SHORT).show();
+                        }
+
+                        //if Down to UP sweep event on screen
+                        if (y1 > y2)
+                        {
+                            Toast.makeText(BarberProfileActivity.this, "Down to UP Swap Performed", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
+
+        //set adapter for barber Work images gridview
+        adapter = new BarberWorkImagesAdapter(BarberProfileActivity.this, barberWorkImagesBitmapList);
+        recyclerView.setAdapter(adapter);// set adapter on recyclerview
 
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.message_menu, menu);
-        return true;
 
+    private void getBarberImagesFromDB() {
+        //Query all the photos
+        ParseQuery<ParseObject> barberProfileImagesQuery = ParseQuery.getQuery("Images");
+        barberProfileImagesQuery.whereEqualTo("UserObjectId",barberUserId);
+        barberProfileImagesQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    Log.i("barberImagesTest", "Query for barber images was sucessful");
+                    try {
+                        ParseFile profileImageFile = object.getParseFile("ProfileImageFile");
+                        byte[] profileImageByteArray = new byte[0];
+                        if (profileImageFile != null) {
+                            profileImageByteArray = profileImageFile.getData();
+                            barberProfileImageView.setImageBitmap(BitmapFactory.decodeByteArray(profileImageByteArray, 0, profileImageByteArray.length));
+                        }
+                        //Get BarbersWorkImages from database
+                        barberWorkImagesFileList = object.getList("ImagesFileList");
+                        if (barberWorkImagesFileList!=null && barberWorkImagesFileList.size()>0){
+                            for (ParseFile workImage: barberWorkImagesFileList){
+                                byte[] barberWorkImageByteArray = new byte[0];
+                                if (workImage != null) {
+                                    barberWorkImageByteArray = workImage.getData();
+                                    barberWorkImagesBitmapList.add(BitmapFactory.decodeByteArray(barberWorkImageByteArray, 0, barberWorkImageByteArray.length));
+                                    adapter = new BarberWorkImagesAdapter(BarberProfileActivity.this, barberWorkImagesBitmapList);
+                                    recyclerView.setAdapter(adapter);// set adapter on recyclerview
+                                }
+
+                            }
+
+                            adapter.notifyDataSetChanged();
+                        }
+                        else{
+
+                        }
+
+
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
+                    }
+                } else {
+                    Log.i("barberImagesTest", "There was an error getting barberImages with "+ barberUserId+" " + e.getMessage());
+                }
+            }
+        });
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -480,64 +510,47 @@ public class BarberProfileActivity extends AppCompatActivity {
             }
         });
     }
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
 
-        switch (event.getAction())
-        {
-            // when user first touches the screen we get x and y coordinate
-            case MotionEvent.ACTION_DOWN:
-            {
-                x1 = event.getX();
-                y1 = event.getY();
-                break;
+    private void getBarberFollewersFromDB(){
+        ParseQuery<ParseObject> barberFollowersQuery = ParseQuery.getQuery("Followers");
+        barberFollowersQuery.whereEqualTo("followerUserId",barberUserId);
+        barberFollowersQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if(e == null){
+                    Log.i("FollowersQuery", "Followers Query was successful");
+                    //Store barberFollower Object
+                    barberFollowerObject = object;
+                    //Query the messages objects for messages for currentUserID
+                    final ParseQuery<ParseObject> currentUserMessagesQuery = new ParseQuery<ParseObject>("Messages");
+                    currentUserMessagesQuery.whereEqualTo("receiverUserId", currentUserId);
+                    currentUserMessagesQuery.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> objects, ParseException e) {
+                            if (e==null){
+                                if (objects.size()>0){
+                                    Log.i("currentUserMessages","Messages Query was succesful");
+                                    for (ParseObject message: objects)
+                                    {
+                                        //Add the messages for currentUser to list
+                                        barberMessagesObjectsList.add(message);
+                                        //Add the messages sender userId to list
+                                        barberMessagesUserNamesList.add(message.getString("senderUserName"));
+
+                                    }
+                                }
+                            }
+                            else{
+                                Log.i("currentUserMessages","Error getting messages for: " + currentUserId +  " error is " + e.getMessage());
+                            }
+                        }
+                    });
+                }
+                else{
+                    Log.i("FollowersQuery","Error getting query " + e.getMessage());
+                }
             }
-            case MotionEvent.ACTION_UP:
-            {
-                x2 = event.getX();
-                y2 = event.getY();
-
-                //if left to right sweep event on screen
-                if (x1 < x2)
-                {
-                    Toast.makeText(this, "Left to Right Swap Performed", Toast.LENGTH_SHORT).show();
-
-                    if (currentUser.getString("barberOrUser").equals("barber")) {
-                        Intent leftSwipeBarberActivityIntent = new Intent(getApplicationContext(),BarberActivity.class);
-                        startActivity(leftSwipeBarberActivityIntent);
-                    }
-                    else{
-                        Intent leftSwipeBarberActivityIntent = new Intent(getApplicationContext(),UserMapsActivity.class);
-                        startActivity(leftSwipeBarberActivityIntent);
-                    }
-
-
-                }
-
-                // if right to left sweep event on screen
-                if (x1 > x2)
-                {
-
-                    Toast.makeText(this, "Right to Left Swap Performed", Toast.LENGTH_SHORT).show();
-
-                }
-
-                // if UP to Down sweep event on screen
-                if (y1 < y2)
-                {
-                    Toast.makeText(this, "UP to Down Swap Performed", Toast.LENGTH_SHORT).show();
-                }
-
-                //if Down to UP sweep event on screen
-                if (y1 > y2)
-                {
-                    Toast.makeText(this, "Down to UP Swap Performed", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            }
-        }
-        return false;
-
+        });
     }
 
 

@@ -45,19 +45,19 @@ public class StarterApplication extends Application {
     * */
     //ParseUser.enableAutomaticUser();
 
-    ParseObject score = new ParseObject("Score");
-    score.put("userName", "Matt");
-    score.saveInBackground(new SaveCallback() {
-      @Override
-      public void done(ParseException e) {
-        if (e==null){
-          Log.d("ParseAmazonCheck", "Data was saved succesfull");
-        }
-        else{
-          Log.e("ParseAmazonError", "Data was not saved " + e.toString());
-        }
-      }
-    });
+//    ParseObject score = new ParseObject("Score");
+//    score.put("userName", "Matt");
+//    score.saveInBackground(new SaveCallback() {
+//      @Override
+//      public void done(ParseException e) {
+//        if (e==null){
+//          Log.d("ParseAmazonCheck", "Data was saved succesfull");
+//        }
+//        else{
+//          Log.e("ParseAmazonError", "Data was not saved " + e.toString());
+//        }
+//      }
+//    });
 
 
     ParseACL defaultACL = new ParseACL();

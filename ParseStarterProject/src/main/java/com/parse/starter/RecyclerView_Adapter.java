@@ -43,12 +43,11 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerViewHolde
 
         RecyclerViewHolder mainHolder = (RecyclerViewHolder) holder;// holder
 
-        Bitmap image = BitmapFactory.decodeResource(context.getResources(),
-                model.getImage());// This will convert drawbale image into
+        Bitmap image = model.getImage();// This will convert drawbale image into
         // bitmap
 
         // setting title
-        mainHolder.barberImageTitle.setText(model.getTitle());
+        mainHolder.barberImageTitle.setText(model.getBarberUserID());
 
         mainHolder.imageView.setImageBitmap(image);
     }

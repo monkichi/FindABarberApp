@@ -81,11 +81,12 @@
             android:name="com.parse.starter.UserMapsActivity"
             android:label="@string/title_activity_user_maps" />
         <activity android:name="com.parse.starter.BarberProfileActivity" />
-        <activity android:name="com.parse.starter.BarberActivity" />
+        <activity android:name="com.parse.starter.BarberMainActivity" />
         <activity android:name="com.parse.starter.ViewBarbersActivity" />
         <activity android:name="com.parse.starter.ViewFollowingActivity" />
         <activity android:name="com.parse.starter.ViewFollowersActivity" />
         <activity android:name="com.parse.starter.ExploreBarbersPhotosActivity" />
+        <activity android:name="com.parse.starter.UpdateBarberProfileActivity" />
         <activity
             android:name="com.google.android.gms.common.api.GoogleApiActivity"
             android:exported="false"

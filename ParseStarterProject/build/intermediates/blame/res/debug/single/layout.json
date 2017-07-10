@@ -36,10 +36,6 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_list_menu_item_radio.xml"
     },
     {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/explore_barber_photos_layout.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/explore_barber_photos_layout.xml"
-    },
-    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_select_dialog_material.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_select_dialog_material.xml"
     },
@@ -164,12 +160,20 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/view_barbers_layout.xml"
     },
     {
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/barber_main_layout.xml",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/barber_main_layout.xml"
+    },
+    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_list_menu_item_checkbox.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_list_menu_item_checkbox.xml"
     },
     {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/notification_template_lines_media.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout/notification_template_lines_media.xml"
+    },
+    {
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/barber_work_images_item_row.xml",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/barber_work_images_item_row.xml"
     },
     {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_search_view.xml",

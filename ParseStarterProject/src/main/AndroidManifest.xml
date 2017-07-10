@@ -70,11 +70,13 @@
             android:name=".UserMapsActivity"
             android:label="@string/title_activity_user_maps" />
         <activity android:name=".BarberProfileActivity" />
-        <activity android:name=".BarberActivity" />
+        <activity android:name=".BarberMainActivity" />
         <activity android:name=".ViewBarbersActivity" />
         <activity android:name=".ViewFollowingActivity" />
         <activity android:name=".ViewFollowersActivity"/>
         <activity android:name=".ExploreBarbersPhotosActivity"/>
+        <activity android:name=".UpdateBarberProfileActivity"/>
+
     </application>
 
 </manifest>

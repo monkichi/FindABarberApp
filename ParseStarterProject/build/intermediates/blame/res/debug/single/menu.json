@@ -4,6 +4,10 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/menu/menu_main.xml"
     },
     {
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/menu/barber_main_menu.xml",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/menu/barber_main_menu.xml"
+    },
+    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/menu/message_menu.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/menu/message_menu.xml"
     }

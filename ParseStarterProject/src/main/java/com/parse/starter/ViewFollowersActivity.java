@@ -182,7 +182,7 @@ public class ViewFollowersActivity extends AppCompatActivity {
                         {
                             Toast.makeText(getApplicationContext(), "Right to Left Swap Performed", Toast.LENGTH_SHORT).show();
                             if (ParseUser.getCurrentUser().getString("barberOrUser").equals("barber")) {
-                                Intent rightSwipeBarberSwipeIntent = new Intent(getApplicationContext(),BarberActivity.class);
+                                Intent rightSwipeBarberSwipeIntent = new Intent(getApplicationContext(),BarberMainActivity.class);
                                 startActivity(rightSwipeBarberSwipeIntent);
                             }
 

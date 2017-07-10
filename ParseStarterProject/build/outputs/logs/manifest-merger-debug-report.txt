@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:9:1-80:12
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:9:1-82:12
 	package
 		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:10:5-32
 		INJECTED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml
@@ -50,7 +50,7 @@ ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/
 	android:name
 		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:31:22-78
 application
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:33:5-78:19
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:33:5-80:19
 MERGED from [com.android.support:appcompat-v7:23.0.1] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services-maps:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.0.2/AndroidManifest.xml:27:5-20
 MERGED from [com.google.android.gms:play-services-base:9.0.2] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/AndroidManifest.xml:19:5-23:19
@@ -117,10 +117,10 @@ activity#com.parse.starter.BarberProfileActivity
 ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:72:9-59
 	android:name
 		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:72:19-56
-activity#com.parse.starter.BarberActivity
-ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:73:9-52
+activity#com.parse.starter.BarberMainActivity
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:73:9-56
 	android:name
-		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:73:19-49
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:73:19-53
 activity#com.parse.starter.ViewBarbersActivity
 ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:74:9-57
 	android:name
@@ -137,6 +137,10 @@ activity#com.parse.starter.ExploreBarbersPhotosActivity
 ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:77:9-65
 	android:name
 		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:77:19-63
+activity#com.parse.starter.UpdateBarberProfileActivity
+ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:78:9-64
+	android:name
+		ADDED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml:78:19-62
 uses-sdk
 INJECTED from /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [com.android.support:appcompat-v7:23.0.1] /Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/AndroidManifest.xml:20:5-43
