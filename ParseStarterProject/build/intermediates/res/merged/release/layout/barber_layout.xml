@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/barberRelativeLayout">
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/relativeLayout2">
+
+       <android.support.v7.widget.Toolbar
+           android:id="@+id/my_toolbar"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:background="?attr/colorPrimary"
+           android:elevation="4dp"
+           android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+           app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+   </RelativeLayout>
+    <ImageView
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:id="@+id/barberProfileImage"
+        android:src="@android:drawable/ic_menu_camera"
+        android:layout_above="@+id/relativeLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relativeLayout2"
+        />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/relativeLayout"
+        android:layout_above="@+id/barberAddressEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+
+        <!--  Recycler View  -->
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/barber_work_images_recycler_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none" />
+    </RelativeLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPostalAddress"
+        android:ems="10"
+        android:id="@+id/barberAddressEditText"
+        android:hint="Barber Address"
+        android:layout_above="@+id/barberPlaceNameEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/barberPlaceNameEditText"
+        android:hint="BarberShop Name"
+        android:layout_above="@+id/barberAboutYouEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/barberAboutYouEditText"
+        android:hint="About you"
+        android:layout_above="@+id/updateBarberProButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update Profile"
+        android:id="@+id/updateBarberProButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/addImageButton"
+        android:layout_width="50dp"
+        android:layout_height="25dp"
+        android:layout_above="@+id/relativeLayout"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="Add Image" />
+
+
+</RelativeLayout>

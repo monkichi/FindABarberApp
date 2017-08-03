@@ -36,6 +36,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.starter.findabarberapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,8 @@ public class BarberProfileActivity extends AppCompatActivity {
     ArrayList<Bitmap> barberWorkImagesBitmapList;
     private RecyclerView recyclerView;
     private BarberWorkImagesAdapter adapter;    //Adapter for default images
+     List<MessagesDataModel> barberMessagesInfoObjectList;
+     //ParseFile workImage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,6 +85,7 @@ public class BarberProfileActivity extends AppCompatActivity {
 
         //Set up Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        toolbar.setTitle("BarberProfile");
         setSupportActionBar(toolbar);
 
         //Inflate barber Info views
@@ -94,7 +98,7 @@ public class BarberProfileActivity extends AppCompatActivity {
 
         //List for messages
         barberMessagesObjectsList =new ArrayList<ParseObject>();
-        barberMessagesUserNamesList = new ArrayList<String>();
+        barberMessagesInfoObjectList = new ArrayList<MessagesDataModel>();
 
         //Instantiate array list for barberWorkImages
         barberWorkImagesFileList = new ArrayList<ParseFile>();
@@ -107,13 +111,13 @@ public class BarberProfileActivity extends AppCompatActivity {
 
         //Get the bundle from barber activity
         Bundle bundle = getIntent().getExtras();
-        //Extract the barberObjectId
+        //Extract the barberObjectId from
         final String barberId = bundle.getString("barberObjectId");
 
         Log.i("ReceivedId", " "+ barberId);
 
 
-        //Query the barberObjectID sent from activity to load a barbers info object
+        //Query the barberObjectID sent from activity to load a barber's info object
         ParseQuery<ParseObject> barberProfileQuery = ParseQuery.getQuery("Barbers");
         barberProfileQuery.getInBackground(barberId, new GetCallback<ParseObject>() {
             public void done(final ParseObject object, ParseException e) {
@@ -121,19 +125,22 @@ public class BarberProfileActivity extends AppCompatActivity {
                     if(object != null){
                         Log.e("profileBarTest","Query was succesful" + object.getString("barberName"));
                         barberObject = object;
+
                         barberNameTextView.setText(object.getString("barberName") +"\n" +
                         object.getString("barberPlaceName"));
                         barberAboutTextView.setText(object.getString("barberAboutText"));
                         barberUserId = object.getString("barberUserId");
+                        //Determine between User or Barber User, We want a user to find out whether we are following the current barber
                         if (!currentUserId.equals(barberUserId)) {
 
                             if(currentUser.getList("isFollowing").contains(barberUserId)){
-                                Log.i("isFollowingTest","The list : " + currentUser.getList("isFollowing").toString()+ "searching barberUserId : " +barberUserId);
+                                Log.i("isFollowingTest","The list : " + currentUser.getList("isFollowing").toString()+ "searching barberUserId : " +
+                                object.getString("barberUserName"));
                                 isFollowing = true;
                                 followButton.setText("Unfollow");
                             }
                             else{
-                                Log.i("isFollowingTest","The list : " + currentUser.getList("isFollowing").toString()+ "searching barberUserId : " +barberUserId);
+                                Log.i("isNotFollowingTest","The list : " + currentUser.getList("isFollowing").toString()+ "searching barberUserId : " +barberUserId);
                                 isFollowing = false;
                                 followButton.setText("Follow");
                             }
@@ -148,17 +155,40 @@ public class BarberProfileActivity extends AppCompatActivity {
 
                                         //Remove user from List
                                         isFollowingList= currentUser.getList("isFollowing");
+
+                                        Log.i("unFollowTest", "Before : " + String.valueOf(isFollowingList.size()) );
+
                                         isFollowingList.remove(barberUserId);
+
+                                        Log.i("unFollowTest", "After" + String.valueOf(isFollowingList.size()) );
+
+
+                                        Log.i("unFollowTest", "Before : " + String.valueOf(followersList.size()) );
 
                                         followersList = barberFollowerObject.getList("followersList");
                                         followersList.remove(currentUserId);
+                                        Log.i("unFollowTest", "After" + String.valueOf(followersList.size()) );
 
                                         currentUser.put("isFollowing",isFollowingList);
-                                        barberFollowerObject.put("followers",followersList);
+                                        barberFollowerObject.put("followersList",followersList);
                                         Log.i("followersList", "List data" + " " + currentUser.getList("isFollowing").toString() + " " + String.valueOf(currentUser.getList("isFollowing").size()));
-                                        currentUser.saveInBackground();
-                                        barberFollowerObject.saveInBackground();
-                                        followButton.setText("Follow");
+                                        currentUser.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                if (e == null){
+                                                    barberFollowerObject.saveInBackground(new SaveCallback() {
+                                                        @Override
+                                                        public void done(ParseException e) {
+                                                            if(e == null){
+
+                                                            }
+                                                        }
+                                                    });
+                                                    followButton.setText("Follow");
+                                                }
+                                            }
+                                        });
+
                                     } else {
                                         followButton.setText("Unfollow");
                                         isFollowing = true;
@@ -174,7 +204,7 @@ public class BarberProfileActivity extends AppCompatActivity {
                                             @Override
                                             public void done(ParseException e) {
                                                 if (e == null) {
-                                                    Log.i("isFollowingTest", "List was Saved with " + barberUserId + "list size " + currentUser.getList("isFollowing").size() + " data " + currentUser.getList("isFollowing").toString());
+                                                    Log.i("isFollowingTest", "List was Saved with " + barberUserId  + " data " + currentUser.getList("isFollowing").toString());
                                                 } else {
                                                     Log.i("isFollowingTest", "List could not be saved" + e.getMessage());
                                                 }
@@ -184,8 +214,7 @@ public class BarberProfileActivity extends AppCompatActivity {
                                             @Override
                                             public void done(ParseException e) {
                                                 if (e == null) {
-                                                    Log.i("FollowersListTest", "List was Saved with " + currentUserId + "list size " + barberFollowerObject.getList("followers").size() + " data " +
-                                                            barberFollowerObject.getList("followersList").toString());
+
                                                 } else {
                                                     Log.i("FollowersListTest", "List could not be saved" + e.getMessage());
                                                 }
@@ -294,7 +323,6 @@ public class BarberProfileActivity extends AppCompatActivity {
             @Override
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
-                    Log.i("barberImagesTest", "Query for barber images was sucessful");
                     try {
                         ParseFile profileImageFile = object.getParseFile("ProfileImageFile");
                         byte[] profileImageByteArray = new byte[0];
@@ -304,24 +332,33 @@ public class BarberProfileActivity extends AppCompatActivity {
                         }
                         //Get BarbersWorkImages from database
                         barberWorkImagesFileList = object.getList("ImagesFileList");
-                        if (barberWorkImagesFileList!=null && barberWorkImagesFileList.size()>0){
-                            for (ParseFile workImage: barberWorkImagesFileList){
-                                byte[] barberWorkImageByteArray = new byte[0];
-                                if (workImage != null) {
-                                    barberWorkImageByteArray = workImage.getData();
-                                    barberWorkImagesBitmapList.add(BitmapFactory.decodeByteArray(barberWorkImageByteArray, 0, barberWorkImageByteArray.length));
-                                    adapter = new BarberWorkImagesAdapter(BarberProfileActivity.this, barberWorkImagesBitmapList);
-                                    recyclerView.setAdapter(adapter);// set adapter on recyclerview
+                        Log.i("barberImagesTest", "Query for barber images was sucessful: " + barberWorkImagesFileList.size() );
+
+                        if (barberWorkImagesFileList!= null) {
+                            if (barberWorkImagesFileList.size() > 0 ){
+                                if (barberWorkImagesFileList.get(0)!= null){
+
+                                    for (ParseFile workImage : barberWorkImagesFileList) {
+                                            byte[] barberWorkImageByteArray = new byte[0];
+                                            if (workImage != null) {
+                                                barberWorkImageByteArray = workImage.getData();
+                                                barberWorkImagesBitmapList.add(BitmapFactory.decodeByteArray(barberWorkImageByteArray, 0, barberWorkImageByteArray.length));
+                                                adapter = new BarberWorkImagesAdapter(BarberProfileActivity.this, barberWorkImagesBitmapList);
+                                                recyclerView.setAdapter(adapter);// set adapter on recyclerview
+                                            }
+
+                                        }
+
+                                        adapter.notifyDataSetChanged();
+
                                 }
 
                             }
 
-                            adapter.notifyDataSetChanged();
                         }
                         else{
 
                         }
-
 
                     } catch (ParseException e1) {
                         e1.printStackTrace();
@@ -334,22 +371,31 @@ public class BarberProfileActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.message_menu,menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        if(itemId ==R.id.logOut_action) {
+
+        if(itemId == R.id.logOut_action) {
             logOut();
         }
+
         else if (itemId == R.id.check_messages_action) {
             //Create the Dialog to view the messages
             Log.i("checkMessagesCheck","Check messages icon has been pressed");
+
+
             AlertDialog.Builder viewMessagesBuilder = new AlertDialog.Builder(BarberProfileActivity.this);
             viewMessagesBuilder.setTitle("View Messages");
 
-            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                    BarberProfileActivity.this,
-                    android.R.layout.select_dialog_singlechoice,barberMessagesUserNamesList);
+            final MessagesListAdapter arrayAdapter = new MessagesListAdapter(
+                    BarberProfileActivity.this
+                    ,barberMessagesInfoObjectList,R.layout.messages_item_row_layout);
 
 
             viewMessagesBuilder.setNegativeButton(
@@ -364,57 +410,57 @@ public class BarberProfileActivity extends AppCompatActivity {
 //              Send Current Barber Profile a New Message Code
 //          */
 
-            viewMessagesBuilder.setPositiveButton("New Message", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //                                            //Create Alter view fro replying to message
-                    AlertDialog.Builder builderInnerInnerSendMessage = new AlertDialog.Builder(BarberProfileActivity.this);
-                    //Add senders userNames
-                    builderInnerInnerSendMessage.setTitle("Send Message to:" + barberObject.getString("barberUserName"));
-                    final EditText replyMessageEditText = new EditText(BarberProfileActivity.this);
-                    builderInnerInnerSendMessage.setView(replyMessageEditText);
-                    builderInnerInnerSendMessage.setPositiveButton("Send", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //Get the message from EditText
-                            String replyMessage = replyMessageEditText.getText().toString();
-                            Log.i("gotMessageTest", "This is the message form editText: " + replyMessage);
-                            //Create the Message Object
-                            ParseObject newMessageObject = new ParseObject("Messages");
-                            //Set the Acl for the object
-                            ParseACL defaultAcl = new ParseACL();
-                            defaultAcl.setPublicWriteAccess(true);
-                            defaultAcl.setPublicReadAccess(true);
-                            newMessageObject.setACL(defaultAcl);
-                            //Store the senders data as the current user since we are sending the message
-                            newMessageObject.put("senderUserId",currentUser.getObjectId());
-                            newMessageObject.put("senderUserName",currentUser.getUsername());
-                            //Should be the barber we want to send message to
-                            newMessageObject.put("receiverUserId",barberObject.getString("barberUserId"));
-                            newMessageObject.put("receiverUserName",barberObject.getString("barberUserName"));
-                            newMessageObject.put("messageContent",replyMessage);
-                            newMessageObject.put("messageReadOrUnread",false);
-
-                            newMessageObject.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if(e== null){
-                                        Log.i("messageReplySent","Message was saved succesfully");
-                                        Toast.makeText(getApplicationContext(),"Message was sent to: " + barberObject.getString("barberUserName"),Toast.LENGTH_SHORT).show();
-                                    }
-                                    else{
-                                        Log.i("messageReplySent","Error saving message"+ e.getMessage());
-                                        Toast.makeText(getApplicationContext(),"Message was not able to send to: " + barberObject.getString("barberUserName")+"\n" +"error is "+ e.getMessage(),Toast.LENGTH_SHORT).show();
-
-                                    }
-                                }
-                            });
-
-                        }
-                    });
-                    builderInnerInnerSendMessage.show();
-                }
-            });
+//            viewMessagesBuilder.setPositiveButton("New Message", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    //                                            //Create Alter view fro replying to message
+//                    AlertDialog.Builder builderInnerInnerSendMessage = new AlertDialog.Builder(BarberProfileActivity.this);
+//                    //Add senders userNames
+//                    builderInnerInnerSendMessage.setTitle("Send Message to:" + barberObject.getString("barberUserName"));
+//                    final EditText replyMessageEditText = new EditText(BarberProfileActivity.this);
+//                    builderInnerInnerSendMessage.setView(replyMessageEditText);
+//                    builderInnerInnerSendMessage.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            //Get the message from EditText
+//                            String replyMessage = replyMessageEditText.getText().toString();
+//                            Log.i("gotMessageTest", "This is the message form editText: " + replyMessage);
+//                            //Create the Message Object
+//                            ParseObject newMessageObject = new ParseObject("Messages");
+//                            //Set the Acl for the object
+//                            ParseACL defaultAcl = new ParseACL();
+//                            defaultAcl.setPublicWriteAccess(true);
+//                            defaultAcl.setPublicReadAccess(true);
+//                            newMessageObject.setACL(defaultAcl);
+//                            //Store the senders data as the current user since we are sending the message
+//                            newMessageObject.put("senderUserId",currentUser.getObjectId());
+//                            newMessageObject.put("senderUserName",currentUser.getUsername());
+//                            //Should be the barber we want to send message to
+//                            newMessageObject.put("receiverUserId",barberObject.getString("barberUserId"));
+//                            newMessageObject.put("receiverUserName",barberObject.getString("barberUserName"));
+//                            newMessageObject.put("messageContent",replyMessage);
+//                            newMessageObject.put("messageReadOrUnread",false);
+//
+//                            newMessageObject.saveInBackground(new SaveCallback() {
+//                                @Override
+//                                public void done(ParseException e) {
+//                                    if(e== null){
+//                                        Log.i("messageReplySent","Message was saved succesfully");
+//                                        Toast.makeText(getApplicationContext(),"Message was sent to: " + barberObject.getString("barberUserName"),Toast.LENGTH_SHORT).show();
+//                                    }
+//                                    else{
+//                                        Log.i("messageReplySent","Error saving message"+ e.getMessage());
+//                                        Toast.makeText(getApplicationContext(),"Message was not able to send to: " + barberObject.getString("barberUserName")+"\n" +"error is "+ e.getMessage(),Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                }
+//                            });
+//
+//                        }
+//                    });
+//                    builderInnerInnerSendMessage.show();
+//                }
+//            });
 
             viewMessagesBuilder.setAdapter(
                     arrayAdapter,
@@ -425,20 +471,36 @@ public class BarberProfileActivity extends AppCompatActivity {
                                     BarberProfileActivity.this);
                             //Update that message has been read
                             barberMessagesObjectsList.get(which).put("messageReadOrUnread", true);
-                            builderInnerMessageView.setTitle("Your message from: "+ barberMessagesUserNamesList.get(which));
+                            builderInnerMessageView.setTitle("Your message from: "+ barberMessagesInfoObjectList.get(which).getMessageSenderUserName());
                             builderInnerMessageView.setMessage(barberMessagesObjectsList.get(which).getString("messageContent"));
+
+                            builderInnerMessageView.setNegativeButton(R.string.negative_button_text, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+
                             builderInnerMessageView.setPositiveButton(
                                     "Reply",
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             Log.i("messageClicked","position: "+ which);
-                                            //Create Alter view fro replying to message
+                                            //Create Alter view for replying to message being currently read
                                             AlertDialog.Builder builderInnerInnerReplyMessage = new AlertDialog.Builder(BarberProfileActivity.this);
                                             //Add senders userName
-                                            builderInnerInnerReplyMessage.setTitle("Reply to: " + barberMessagesUserNamesList.get(which + 1));
+                                            builderInnerInnerReplyMessage.setTitle("Reply to: " + barberMessagesInfoObjectList.get(which + 1).getMessageSenderUserName());
                                             final EditText replyMessageEditText = new EditText(BarberProfileActivity.this);
                                             builderInnerInnerReplyMessage.setView(replyMessageEditText);
+                                            builderInnerInnerReplyMessage.setNegativeButton(R.string.negative_button_text, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+
                                             builderInnerInnerReplyMessage.setPositiveButton("Send", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, final int which) {
@@ -451,6 +513,7 @@ public class BarberProfileActivity extends AppCompatActivity {
                                                     newMessageObject.put("senderUserName",currentUser.getUsername());
                                                     //Should be the users userID
                                                     newMessageObject.put("receiverUserName",barberMessagesObjectsList.get(which +1).getString("senderUserName"));
+                                                    newMessageObject.put("messageReadOrUnread",false);
                                                     newMessageObject.put("messageContent",replyMessage);
 
                                                     newMessageObject.saveInBackground(new SaveCallback() {
@@ -458,11 +521,11 @@ public class BarberProfileActivity extends AppCompatActivity {
                                                         public void done(ParseException e) {
                                                             if(e== null){
                                                                 Log.i("messageReplySent","Message was saved succesfully");
-                                                                Toast.makeText(getApplicationContext(),"Message was sent to: " + barberMessagesObjectsList.get(which + 1).getString("senderUserId"),Toast.LENGTH_SHORT);
+                                                                Toast.makeText(getApplicationContext(),"Message was sent to: " + barberMessagesObjectsList.get(which + 1).getString("senderUserId"),Toast.LENGTH_SHORT).show();
                                                             }
                                                             else{
                                                                 Log.i("messageReplySent","Error saving message"+ e.getMessage());
-                                                                Toast.makeText(getApplicationContext(),"Message was not able to send to: " + barberMessagesObjectsList.get(which + 1).getString("senderUserId")+"\n" +"error is "+ e.getMessage(),Toast.LENGTH_SHORT);
+                                                                Toast.makeText(getApplicationContext(),"Message was not able to send to: " + barberMessagesObjectsList.get(which + 1).getString("senderUserId")+"\n" +"error is "+ e.getMessage(),Toast.LENGTH_SHORT).show();
 
                                                             }
                                                         }
@@ -512,6 +575,7 @@ public class BarberProfileActivity extends AppCompatActivity {
     }
 
     private void getBarberFollewersFromDB(){
+       //Queru the barbers Follers
         ParseQuery<ParseObject> barberFollowersQuery = ParseQuery.getQuery("Followers");
         barberFollowersQuery.whereEqualTo("followerUserId",barberUserId);
         barberFollowersQuery.getFirstInBackground(new GetCallback<ParseObject>() {
@@ -524,6 +588,7 @@ public class BarberProfileActivity extends AppCompatActivity {
                     //Query the messages objects for messages for currentUserID
                     final ParseQuery<ParseObject> currentUserMessagesQuery = new ParseQuery<ParseObject>("Messages");
                     currentUserMessagesQuery.whereEqualTo("receiverUserId", currentUserId);
+                    currentUserMessagesQuery.orderByDescending("createdAt");
                     currentUserMessagesQuery.findInBackground(new FindCallback<ParseObject>() {
                         @Override
                         public void done(List<ParseObject> objects, ParseException e) {
@@ -532,10 +597,31 @@ public class BarberProfileActivity extends AppCompatActivity {
                                     Log.i("currentUserMessages","Messages Query was succesful");
                                     for (ParseObject message: objects)
                                     {
+
+                                        //Message content
+                                        String messageContent= message.getString("messageContent") ;
+                                        //Store the date it was created
+
+                                        //Store the sendersUserName
+                                        String messageSenderUserName = message.getString("senderUserName");
+
+                                        //Store the receiversUserName
+                                        String messageReceiverUserName = message.getString("receiverUserName");
+
+                                        //Message read or not read
+                                        boolean messageReadStatus = message.getBoolean("messageReadOrUnread");
+
+                                        //Message ReceiverObjectId
+                                        String getMessageReceiverUserId = message.getString("receiverUserId");
+
+
+                                        //Create the message data model to store all possible message data
+                                        MessagesDataModel messageModel = new MessagesDataModel(messageContent,messageSenderUserName,messageReceiverUserName,messageReadStatus,getMessageReceiverUserId);
+
+                                        barberMessagesInfoObjectList.add(messageModel);
                                         //Add the messages for currentUser to list
                                         barberMessagesObjectsList.add(message);
-                                        //Add the messages sender userId to list
-                                        barberMessagesUserNamesList.add(message.getString("senderUserName"));
+
 
                                     }
                                 }

@@ -7,6 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.parse.starter.findabarberapp.R;
+
 import java.util.ArrayList;
 import java.util.List;
 

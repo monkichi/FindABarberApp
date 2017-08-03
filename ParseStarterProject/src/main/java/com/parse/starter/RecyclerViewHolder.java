@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.starter.findabarberapp.R;
+
 /**
  * Created by chris on 6/18/17.
  */

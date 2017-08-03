@@ -16,4 +16,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_barber_maps">Map</string>
     <string name="title_activity_user_maps">Map</string>
+    <string name="negative_button_text">Close</string>
+    <string name="positive_button_text">Send Message</string>
+
 </resources>

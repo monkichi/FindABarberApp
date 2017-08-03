@@ -28,11 +28,20 @@ public class StarterApplication extends Application {
     // Enable Local Datastore.
     Parse.enableLocalDatastore(this);
 
+//    // Add your initialization code here
+//    Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
+//            .applicationId("testapp3245jfjdkfa88983937893789")
+//            .clientKey("dfjjdafdfjkc83727373")
+//            .server("http://testapp3245.herokuapp.com/parse/")
+//            .build()
+//    );
+
+
     // Add your initialization code here
     Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
-            .applicationId("testapp3245jfjdkfa88983937893789")
-            .clientKey("dfjjdafdfjkc83727373")
-            .server("http://testapp3245.herokuapp.com/parse/")
+            .applicationId("6f7b68060b9a13173083d6668707d675ef078043")
+            .clientKey("3bf794a59cac1dda19adc73b74cd9ffd290744b7")
+            .server("http://ec2-52-41-16-205.us-west-2.compute.amazonaws.com/parse/")
             .build()
     );
 //    testapp3245.herokuapp.com
@@ -44,20 +53,6 @@ public class StarterApplication extends Application {
     * http://stackoverflow.com/questions/20254545/parse-for-android-parseuser-logout-doesnt-log-user-out
     * */
     //ParseUser.enableAutomaticUser();
-
-//    ParseObject score = new ParseObject("Score");
-//    score.put("userName", "Matt");
-//    score.saveInBackground(new SaveCallback() {
-//      @Override
-//      public void done(ParseException e) {
-//        if (e==null){
-//          Log.d("ParseAmazonCheck", "Data was saved succesfull");
-//        }
-//        else{
-//          Log.e("ParseAmazonError", "Data was not saved " + e.toString());
-//        }
-//      }
-//    });
 
 
     ParseACL defaultACL = new ParseACL();

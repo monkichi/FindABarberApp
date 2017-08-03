@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.starter.findabarberapp.R;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;

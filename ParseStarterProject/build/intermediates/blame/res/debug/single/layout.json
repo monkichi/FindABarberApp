@@ -8,6 +8,10 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_expanded_menu_layout.xml"
     },
     {
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/messages_item_row_layout.xml",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/messages_item_row_layout.xml"
+    },
+    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_action_bar_up_container.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_action_bar_up_container.xml"
     },
@@ -48,10 +52,6 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_activity_chooser_view_list_item.xml"
     },
     {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/notification_template_custom_big.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout/notification_template_custom_big.xml"
-    },
-    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_action_bar_view_list_nav_layout.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_action_bar_view_list_nav_layout.xml"
     },
@@ -80,10 +80,6 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_screen_simple_overlay_action_mode.xml"
     },
     {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_popup_menu_header_item_layout.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout/abc_popup_menu_header_item_layout.xml"
-    },
-    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_list_menu_item_layout.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_list_menu_item_layout.xml"
     },
@@ -96,12 +92,12 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_screen_content_include.xml"
     },
     {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/activity_main.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/activity_main.xml"
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/place_autocomplete_item_prediction.xml",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-places/10.2.0/res/layout/place_autocomplete_item_prediction.xml"
     },
     {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/notification_action_tombstone.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout/notification_action_tombstone.xml"
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/activity_main.xml",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/activity_main.xml"
     },
     {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_action_mode_bar.xml",
@@ -112,6 +108,10 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_action_mode_close_item_material.xml"
     },
     {
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/place_autocomplete_item_powered_by_google.xml",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-places/10.2.0/res/layout/place_autocomplete_item_powered_by_google.xml"
+    },
+    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/notification_template_big_media.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/notification_template_big_media.xml"
     },
@@ -120,32 +120,20 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/follower_list_item.xml"
     },
     {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/notification_template_media_custom.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout/notification_template_media_custom.xml"
-    },
-    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/barber_profile_layout.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/barber_profile_layout.xml"
-    },
-    {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_alert_dialog_title_material.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout/abc_alert_dialog_title_material.xml"
     },
     {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/sign_up_layout.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/sign_up_layout.xml"
     },
     {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_search_dropdown_item_icons_2line.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_search_dropdown_item_icons_2line.xml"
-    },
-    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/explore_photos_item_row.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/explore_photos_item_row.xml"
     },
     {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_alert_dialog_button_bar_material.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/layout/abc_alert_dialog_button_bar_material.xml"
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_search_dropdown_item_icons_2line.xml",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_search_dropdown_item_icons_2line.xml"
     },
     {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/support_simple_spinner_dropdown_item.xml",
@@ -156,24 +144,20 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/notification_template_part_time.xml"
     },
     {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/view_barbers_layout.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/view_barbers_layout.xml"
-    },
-    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/barber_main_layout.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/barber_main_layout.xml"
     },
     {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_list_menu_item_checkbox.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_list_menu_item_checkbox.xml"
-    },
-    {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/notification_template_lines_media.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout/notification_template_lines_media.xml"
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/view_barbers_layout.xml",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/view_barbers_layout.xml"
     },
     {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/barber_work_images_item_row.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/barber_work_images_item_row.xml"
+    },
+    {
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_list_menu_item_checkbox.xml",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_list_menu_item_checkbox.xml"
     },
     {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_search_view.xml",
@@ -188,20 +172,12 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/notification_template_part_chronometer.xml"
     },
     {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/notification_action.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout/notification_action.xml"
-    },
-    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/view_following_layout.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/view_following_layout.xml"
     },
     {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/abc_alert_dialog_material.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_alert_dialog_material.xml"
-    },
-    {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/notification_template_icon_group.xml",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout/notification_template_icon_group.xml"
     },
     {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/activity_user_maps.xml",
@@ -232,7 +208,15 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/notification_template_lines.xml"
     },
     {
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/place_autocomplete_fragment.xml",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-places/10.2.0/res/layout/place_autocomplete_fragment.xml"
+    },
+    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/activity_view_followers.xml",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/src/main/res/layout/activity_view_followers.xml"
+    },
+    {
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/layout/place_autocomplete_progress.xml",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.google.android.gms/play-services-places/10.2.0/res/layout/place_autocomplete_progress.xml"
     }
 ]

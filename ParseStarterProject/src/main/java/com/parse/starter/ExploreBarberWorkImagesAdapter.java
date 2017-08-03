@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 
+import com.parse.starter.findabarberapp.R;
+
 import java.util.ArrayList;
 
 /**

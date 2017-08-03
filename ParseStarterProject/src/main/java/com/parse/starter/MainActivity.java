@@ -37,6 +37,7 @@ import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.starter.findabarberapp.R;
 
 
 public class MainActivity extends AppCompatActivity {

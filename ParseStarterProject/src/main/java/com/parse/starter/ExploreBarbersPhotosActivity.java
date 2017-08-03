@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -26,6 +27,7 @@ import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.starter.findabarberapp.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +55,10 @@ public class ExploreBarbersPhotosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recyclerview);
 
-
+        //Set up Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        toolbar.setTitle("Explore Barbers");
+        setSupportActionBar(toolbar);
         /*
             Code for Scrollable Recycler View
         * */
@@ -97,44 +102,18 @@ public class ExploreBarbersPhotosActivity extends AppCompatActivity {
         exploreBarberImagesRandomList = new ArrayList<ExploreBarbersImagesDataModel>();
         currentBarberImageList = new ArrayList<ParseFile>();
 
-        adapter = new ExploreBarberWorkImagesAdapter(ExploreBarbersPhotosActivity.this,  exploreBarberImagesRandomList);
-        recyclerView.setAdapter(adapter);// set adapter on recyclerview
 
 
         //Call method to get all the images for this explore barber work images activity in backgroud
         getExploreBarberImages();
 
+        adapter = new ExploreBarberWorkImagesAdapter(ExploreBarbersPhotosActivity.this,  exploreBarberImagesRandomList);
+        recyclerView.setAdapter(adapter);// set adapter on recyclerview
+
+
 
 
     }
-
-//    // references to our images
-//    private Integer[] mThumbIds = {
-//            R.drawable.sample_2, R.drawable.sample_3,
-//            R.drawable.sample_4, R.drawable.sample_5,
-//            R.drawable.sample_6, R.drawable.sample_7,
-//            R.drawable.sample_0, R.drawable.sample_1,
-//            R.drawable.sample_2, R.drawable.sample_3,
-//            R.drawable.sample_4, R.drawable.sample_5,
-//            R.drawable.sample_6, R.drawable.sample_7,
-//            R.drawable.sample_0, R.drawable.sample_1,
-//            R.drawable.sample_2, R.drawable.sample_3,
-//            R.drawable.sample_4, R.drawable.sample_5,
-//            R.drawable.sample_6, R.drawable.sample_7
-//    };
-
-//
-//    // populate the list view by adding data to arraylist
-//    private void populatRecyclerView() {
-//        ArrayList<ExploreBarbersImagesDataModel> arrayList = new ArrayList<>();
-//        for (int i = 0; i < mThumbIds.length; i++) {
-//            arrayList.add(new ExploreBarbersImagesDataModel("Yo",mThumbIds[i]));
-//        }
-//        RecyclerView_Adapter  adapter = new RecyclerView_Adapter(ExploreBarbersPhotosActivity.this, arrayList);
-//        recyclerView.setAdapter(adapter);// set adapter on recyclerview
-//        adapter.notifyDataSetChanged();// Notify the adapter
-//
-//    }
 
 
     private void getExploreBarberImages(){
@@ -150,14 +129,14 @@ public class ExploreBarbersPhotosActivity extends AppCompatActivity {
         nearestBarbersQuery.setLimit(150);
         nearestBarbersQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseObject> objects, ParseException e) {
+            public void done(final List<ParseObject> objects, ParseException e) {
                 if (e == null ){
                     if (objects.size() > 0){
                         nearbyBarberObjectsList = objects;
-                        Log.i("nearbyBarberImagesTest", "Got Barber Objects : " + nearbyBarberObjectsList.size());
-                        for (ParseObject barbers : nearbyBarberObjectsList ) {
+                        Log.i("exploreNearbyBarbers", "Got Nearby Barber Objects : " + nearbyBarberObjectsList.size());
+                        for (final ParseObject barbers : nearbyBarberObjectsList ) {
                             nearestBarberImagesQuery = ParseQuery.getQuery("Images");
-                            nearestBarberImagesQuery.whereEqualTo("UserObjectId",barbers.get("barberUserId"));
+                            nearestBarberImagesQuery.whereEqualTo("UserObjectId", barbers.get("barberUserId"));
                             nearestBarberImagesQuery.getFirstInBackground(new GetCallback<ParseObject>() {
                                 @Override
                                 public void done(ParseObject object, ParseException e) {
@@ -166,23 +145,31 @@ public class ExploreBarbersPhotosActivity extends AppCompatActivity {
                                         currentBarberImageList = object.getList("ImagesFileList");
                                         //iterate through all images from current barber into ExploreBarberImageList
                                         if (currentBarberImageList != null && currentBarberImageList.size() > 0) {
-                                            Log.i("nearbyBarberImagesTest", "Got Barber Images : " + currentBarberImageList.size());
-                                            for (ParseFile workImage : currentBarberImageList) {
-                                                byte[] barberWorkImageByteArray;
-                                                if (workImage != null) {
-                                                    try {
-                                                        barberWorkImageByteArray = workImage.getData();
-                                                        ExploreBarbersImagesDataModel model = new ExploreBarbersImagesDataModel(object.getString("UserObjectId"),BitmapFactory.decodeByteArray(barberWorkImageByteArray, 0, barberWorkImageByteArray.length));
-                                                        exploreBarberImagesRandomList.add(model);
-                                                        //All Nearest Barbers Images should be in exploreBarberImagesRandomList
-                                                        Log.i("nearbyBarberImagesTest", "BarberWorkImagesAdapter size : " + exploreBarberImagesRandomList.size());
-                                                        Collections.shuffle(exploreBarberImagesRandomList);
-                                                        adapter.notifyDataSetChanged();// Notify the adapter\
-                                                    } catch (ParseException e1) {
-                                                        e1.printStackTrace();
-                                                    }
-                                                }
+                                            Log.i("explNeayBarberImages", "Got Barber Images " + currentBarberImageList.size());
 
+                                            if (currentBarberImageList.get(0) != null) {
+
+                                                for (int i = 0; i < currentBarberImageList.size() ; i++) {
+                                                    if (currentBarberImageList.get(i) != null) {
+
+                                                        ParseFile workImage = currentBarberImageList.get(i);
+                                                        byte[] barberWorkImageByteArray;
+                                                        if (workImage != null) {
+                                                            try {
+                                                                barberWorkImageByteArray = workImage.getData();
+                                                                ExploreBarbersImagesDataModel model = new ExploreBarbersImagesDataModel(barbers.getObjectId(), BitmapFactory.decodeByteArray(barberWorkImageByteArray, 0, barberWorkImageByteArray.length));
+                                                                exploreBarberImagesRandomList.add(model);
+                                                                //All Nearest Barbers Images should be in exploreBarberImagesRandomList
+                                                                Log.i("explrImageAllTest", "BarberWorkImagesAdapter size : " + exploreBarberImagesRandomList.size());
+                                                                Collections.shuffle(exploreBarberImagesRandomList);
+                                                                adapter.notifyDataSetChanged();
+                                                            } catch (ParseException e1) {
+                                                                e1.printStackTrace();
+                                                            }
+                                                        }
+
+                                                    }
+                                                }//Should be looping thorough all of current barbers images
                                             }
 
                                         }
@@ -204,9 +191,16 @@ public class ExploreBarbersPhotosActivity extends AppCompatActivity {
                     else{
                         Log.i("Barber Query", "No data objects returned size : " + objects.size());
                     }
+
+
                 }
+                else{
+                    Log.e("BarberQuery", "Barber Query Error " + e.toString());
+                }
+
             }
         });
+
 
     }//End of getBarberImages method
 

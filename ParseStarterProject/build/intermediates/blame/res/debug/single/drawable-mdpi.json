@@ -100,12 +100,12 @@
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/drawable-mdpi/abc_textfield_default_mtrl_alpha.9.png"
     },
     {
-        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/drawable-mdpi/abc_ic_go_search_api_mtrl_alpha.png",
-        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/drawable-mdpi/abc_ic_go_search_api_mtrl_alpha.png"
-    },
-    {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/drawable-mdpi/abc_list_divider_mtrl_alpha.9.png",
         "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/drawable-mdpi/abc_list_divider_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/drawable-mdpi/abc_ic_go_search_api_mtrl_alpha.png",
+        "source": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/drawable-mdpi/abc_ic_go_search_api_mtrl_alpha.png"
     },
     {
         "merged": "/Users/chris/Documents/github/FindABarberApp/ParseStarterProject/build/intermediates/res/merged/debug/drawable-mdpi/abc_btn_check_to_on_mtrl_000.png",

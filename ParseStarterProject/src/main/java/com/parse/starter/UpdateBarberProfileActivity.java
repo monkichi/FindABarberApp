@@ -40,7 +40,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -53,6 +52,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.starter.findabarberapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,6 +63,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.LineNumberInputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -114,9 +115,11 @@ public class UpdateBarberProfileActivity extends AppCompatActivity implements Vi
     List<ParseFile> barberWorkImagesFileList;
     ArrayList<Bitmap> barberWorkImagesIntList;
     private BarberWorkImagesAdapter adapter;    //Adapter for default images
-    ArrayAdapter<String> arrayAdapter;
+    MessagesListAdapter arrayAdapter;
     private boolean isDefaultImageList= false;
     private ParseFile barberWorkImageFile;
+    List<ParseObject> barberMessagesObjectsList;
+    List<MessagesDataModel> barberMessagesInfoObjectList;
 
 
     @Override
@@ -127,7 +130,14 @@ public class UpdateBarberProfileActivity extends AppCompatActivity implements Vi
 
         //Set up toolabar
         Toolbar actionToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        actionToolbar.setTitle("Update Profile");
         setSupportActionBar(actionToolbar);
+
+        //Inflate UI's for barber profile input info
+        barberAddressEditText = (EditText) findViewById(R.id.barberAddressEditText);
+        barberPlaceNameEditText = (EditText) findViewById(R.id.barberPlaceNameEditText);
+        barberAboutYouEditText = (EditText) findViewById(R.id.barberAboutYouEditText);
+        updateBarberProButton = (Button) findViewById(R.id.updateBarberProButton);
 
         //Set up keyboard management
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.barberRelativeLayout);
@@ -142,7 +152,9 @@ public class UpdateBarberProfileActivity extends AppCompatActivity implements Vi
 
         //instantiate list of message and barber work files
         messagesReceivedList = new ArrayList<ParseObject>();
-        messagesReceiverUserNameList=new ArrayList<String>();
+        barberMessagesInfoObjectList = new ArrayList<MessagesDataModel>();
+
+
         barberWorkImagesFileList = new ArrayList<ParseFile>();
         barberWorkImagesIntList = new ArrayList<Bitmap>();
 
@@ -179,25 +191,28 @@ public class UpdateBarberProfileActivity extends AppCompatActivity implements Vi
                     currentUserImageObject = object;
                     Log.i("ImagesQuerySuccess","Got a result " + currentUserImageObject.get("UserObjectId") );
                     try {
-                        ParseFile profileImageFile = object.getParseFile("ProfileImageFile");
+                        ParseFile profileImageFile = currentUserImageObject.getParseFile("ProfileImageFile");
                         byte[] profileImageByteArray = new byte[0];
                         if (profileImageFile != null) {
                             profileImageByteArray = profileImageFile.getData();
                             barberProfileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileImageByteArray, 0, profileImageByteArray.length));
 
                             //Get list of Images
-                            barberWorkImagesFileList = object.getList("ImagesFileList");
+                            barberWorkImagesFileList = currentUserImageObject.getList("ImagesFileList");
                             if (barberWorkImagesFileList != null && barberWorkImagesFileList.size() > 0) {
-                                for (ParseFile workImage : barberWorkImagesFileList) {
 
-                                    byte[] barberWorkImageByteArray = new byte[0];
-                                    if (workImage != null) {
-                                        barberWorkImageByteArray = workImage.getData();
-                                        barberWorkImagesIntList.add(BitmapFactory.decodeByteArray(barberWorkImageByteArray, 0, barberWorkImageByteArray.length));
-                                        adapter = new BarberWorkImagesAdapter(UpdateBarberProfileActivity.this, barberWorkImagesIntList);
-                                        recyclerView.setAdapter(adapter);// set adapter on recyclerview
+                                for (int i=0; i< barberWorkImagesFileList.size() ; i++) {
+
+                                    if (barberWorkImagesFileList.get(i)!= null) {
+                                        ParseFile workImage = barberWorkImagesFileList.get(i);
+                                        byte[] barberWorkImageByteArray = new byte[0];
+                                        if (workImage != null) {
+                                            barberWorkImageByteArray = workImage.getData();
+                                            barberWorkImagesIntList.add(BitmapFactory.decodeByteArray(barberWorkImageByteArray, 0, barberWorkImageByteArray.length));
+                                            adapter = new BarberWorkImagesAdapter(UpdateBarberProfileActivity.this, barberWorkImagesIntList);
+                                            recyclerView.setAdapter(adapter);// set adapter on recyclerview
+                                        }
                                     }
-
                                 }
                                 //after list has been traversed, set data adapter
                                 adapter.notifyDataSetChanged();
@@ -221,99 +236,36 @@ public class UpdateBarberProfileActivity extends AppCompatActivity implements Vi
             }//End of ParseQuery Result Method
         });
 
-        //Inflate UI's for barber profile input info
-         barberAddressEditText = (EditText) findViewById(R.id.barberAddressEditText);
-         barberPlaceNameEditText = (EditText) findViewById(R.id.barberPlaceNameEditText);
-         barberAboutYouEditText = (EditText) findViewById(R.id.barberAboutYouEditText);
-         updateBarberProButton = (Button) findViewById(R.id.updateBarberProButton);
+
 
         //Set Up Listener for button click
         updateBarberProButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //We want to get all the users info and store in database
-                if (barberProfileImage != null && barberAddressEditText.getText().length()>0 && barberPlaceNameEditText.getText().length()>0 &&
-                        barberAboutYouEditText.getText().length()>0){
-                    //Load the info into the database
-                    if (currentUser ==  null){
-                        Log.e("FindUserinBarberAct","Current user is null");
-                    }
-                    else{
-                       //LatLng address = getLocationFromAddress(getApplicationContext(),barberAddressEditText.getText().toString());
-                        DownloadTask task = new DownloadTask();
-                        //Get the address string and parse
-                        String addressString = barberAddressEditText.getText().toString();
-                        String [] addressStringArray = addressString.split(" ");
 
-                        String addressStreetNumber = addressStringArray[0];
-                        String addressStreetName = addressStringArray[1] + "+"+ addressStringArray[2] +",";
-                        String addressStreetCity = addressStringArray[3];
-                        String addressStreetState = addressStringArray[4];
+                //Check all info is filled out in database
 
-                        try {
-                           LatLng address = task.execute(googleGeocodingURL + addressStreetNumber + "+" +addressStreetName + "+" + addressStreetCity + addressStreetState).get();
-                            if (address!= null){
-                                barberObject.put("barberAddress", new ParseGeoPoint(address.latitude,address.longitude));
-                                barberObject.put("barberAboutText", barberAboutYouEditText.getText().toString());
-                                barberObject.put("barberPlaceName",barberPlaceNameEditText.getText().toString());
-                                //Get image drawable from profileImageview
-                                BitmapDrawable profileImageBitMapdrawable = ((BitmapDrawable)barberProfileImage.getDrawable());
-                                // Create the ParseFile
-                                ParseFile profileImageFile = new ParseFile("profileImage.png", getImageViewByteArray(profileImageBitMapdrawable));
-                                // Upload the image into Parse Cloud
-                                profileImageFile.saveInBackground();
-                                        // Create a column named "ImageFile" and insert the image
-                                        currentUserImageObject.put("ProfileImageFile", profileImageFile);
-                                        //Get list of ParseFiles
-                                        currentUserImageObject.put("ImagesFileList",barberWorkImagesFileList);
-                                        // Create the class and the columns
-                                        currentUserImageObject.saveInBackground(new SaveCallback() {
-                                            @Override
-                                            public void done(ParseException e) {
-                                                if(e==null){
-                                                    Log.i("barberLoadingCheck", "All the barbers data was succcesfully update");
-                                                }
-                                                else{
-                                                    Log.i("barLoadingCheck", "There was an error: " + e.getMessage());
-                                                }
-                                            }
-                                        });
-
-                                        // Show a simple toast message
-                                        Toast.makeText(getApplicationContext(), "Images Uploaded",
-                                                Toast.LENGTH_SHORT).show();
-
-                                barberObject.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if (e == null){
-                                            Log.i("BarberProfileTest", "Data has been save for user " + currentUser.getUsername() );
-                                            Toast.makeText(getApplicationContext(),"Profile has been update" + " " + currentUser.getUsername(),Toast.LENGTH_SHORT).show();
-                                            Intent goBackToMainPageActivity = new Intent(getApplicationContext(), BarberMainActivity.class);
-                                            startActivity(goBackToMainPageActivity);
-                                        }else{
-                                            Log.i("BarberProfileTest", "Data was not able to save " + e.getMessage() );
-
-                                        }
-                                    }
-                                });
-
-
-
-                            }
-                            else {
-                                Toast.makeText(getApplicationContext(),"Address returned null", Toast.LENGTH_LONG).show();
-                            }
-                            //End of Null Address check
-                        } //End of Try catch
-                        catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                if(barberAddressEditText.getText()!= null && barberPlaceNameEditText.getText()!=null && barberAboutYouEditText.getText()!=null){
+                    updateBarberInfo();
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), "Please fill out all the information", Toast.LENGTH_SHORT).show();
+                    if (barberAddressEditText.getText()==null){
+                        Toast.makeText(getApplicationContext(), "Please provide an Address", Toast.LENGTH_LONG).show();
+                    }
+
+                    if (barberAboutYouEditText.getText()== null){
+                        Toast.makeText(getApplicationContext(), "Please provide info about you", Toast.LENGTH_LONG).show();
+
+                    }
+
+                    if (barberPlaceNameEditText.getText() == null){
+                        Toast.makeText(getApplicationContext(), "Please provide an barber place", Toast.LENGTH_LONG).show();
+
+                    }
                 }
+
+
+
             }
         });
 
@@ -409,9 +361,9 @@ public class UpdateBarberProfileActivity extends AppCompatActivity implements Vi
             AlertDialog.Builder viewMessagesBuilder = new AlertDialog.Builder(UpdateBarberProfileActivity.this);
             viewMessagesBuilder.setTitle("Messages");
 
-            arrayAdapter = new ArrayAdapter<String>(
+            arrayAdapter = new MessagesListAdapter(
                     UpdateBarberProfileActivity.this,
-                    android.R.layout.select_dialog_singlechoice, messagesReceiverUserNameList);
+                    barberMessagesInfoObjectList, R.layout.messages_item_row_layout);
         
 
             viewMessagesBuilder.setNegativeButton("cancel",
@@ -425,7 +377,7 @@ public class UpdateBarberProfileActivity extends AppCompatActivity implements Vi
             viewMessagesBuilder.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            final String originalMessaSenderUserName = arrayAdapter.getItem(which);
+                            final String originalMessaSenderUserName = barberMessagesInfoObjectList.get(which).messageSenderUserName;
                             AlertDialog.Builder builderInnerViewMessage = new AlertDialog.Builder(
                                     UpdateBarberProfileActivity.this);
                             //Get access to the message object and update that it has been saved
@@ -454,6 +406,14 @@ public class UpdateBarberProfileActivity extends AppCompatActivity implements Vi
                                             builderInnerInnerReplyMessage.setTitle("Reply to:" + originalMessaSenderUserName);
                                             final EditText replyMessageEditText = new EditText(UpdateBarberProfileActivity.this);
                                             builderInnerInnerReplyMessage.setView(replyMessageEditText);
+
+                                            builderInnerInnerReplyMessage.setNegativeButton(R.string.negative_button_text, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+
                                             builderInnerInnerReplyMessage.setPositiveButton("Send", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, final int which) {
@@ -831,17 +791,23 @@ public class UpdateBarberProfileActivity extends AppCompatActivity implements Vi
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Barbers");
         query.whereEqualTo("barberUserId",currentUser.getObjectId());
-        query.findInBackground(new FindCallback<ParseObject>() {
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
-            public void done(List<ParseObject> objects, ParseException e) {
+            public void done(ParseObject object, ParseException e) {
                 if (e == null) {
-                    if(objects != null && objects.size() > 0){
-                        barberObject = objects.get(0);
+                    if(object != null ){
+                        barberObject = object;
                         Log.i("BarberQuery","Query was succesful with object id "+ currentUser.getObjectId() +" object " + barberObject.get("barberUserId"));
+
+                        barberAboutYouEditText.setText(barberObject.getString("barberAboutText"));
+                        barberPlaceNameEditText.setText(barberObject.getString("barberPlaceName"));
+                        //barberAddressEditText.setText(barberObject.getString("barberAddress"));
+
 
                         //Query all the messages for the currentUserId which should be a barber
                         ParseQuery<ParseObject> getMessagesObject = new ParseQuery<ParseObject>("Messages");
                         getMessagesObject.whereEqualTo("receiverUserId",currentUser.getObjectId());
+                        getMessagesObject.orderByDescending("createdAt");
                         getMessagesObject.findInBackground(new FindCallback<ParseObject>() {
                             @Override
                             public void done(List<ParseObject> objects, ParseException e) {
@@ -851,8 +817,29 @@ public class UpdateBarberProfileActivity extends AppCompatActivity implements Vi
                                         for (ParseObject messages: objects){
                                             Log.i("messages", "Message from" + messages.getString("senderUserName")+ " " + "\n"+
                                                     "message content is " + messages.getString("messageContent"));
+                                            //Message content
+                                            String messageContent= messages.getString("messageContent") ;
+                                            //Store the date it was created
+
+                                            //Store the sendersUserName
+                                            String messageSenderUserName = messages.getString("senderUserName");
+
+                                            //Store the receiversUserName
+                                            String messageReceiverUserName = messages.getString("receiverUserName");
+
+                                            //Message read or not read
+                                            boolean messageReadStatus = messages.getBoolean("messageReadOrUnread");
+
+                                            //Message ReceiverObjectId
+                                            String getMessageReceiverUserId = messages.getString("receiverUserId");
+
+
+                                            //Create the message data model to store all possible message data
+                                            MessagesDataModel messageModel = new MessagesDataModel(messageContent,messageSenderUserName,messageReceiverUserName,messageReadStatus,getMessageReceiverUserId);
+
+                                            barberMessagesInfoObjectList.add(messageModel);
+                                            //Add the messages for currentUser to list
                                             messagesReceivedList.add(messages);
-                                            messagesReceiverUserNameList.add(messages.getString("senderUserName"));
 
                                         }
                                     }
@@ -893,6 +880,88 @@ public class UpdateBarberProfileActivity extends AppCompatActivity implements Vi
         prof.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] image = stream.toByteArray();
         return image;
+    }
+
+    public void updateBarberInfo(){
+
+        DownloadTask task = new DownloadTask();
+
+        //Get the address string and parse
+        String addressString = barberAddressEditText.getText().toString();
+
+        String [] addressStringArray = addressString.split(" ");
+
+        String addressStreetNumber = addressStringArray[0];
+        String addressStreetName = addressStringArray[1] + "+"+ addressStringArray[2] +",";
+        String addressStreetCity = addressStringArray[3];
+        String addressStreetState = addressStringArray[4];
+
+        try {
+
+            //Get the address in the background from string
+            LatLng address = task.execute(googleGeocodingURL + addressStreetNumber + "+" +addressStreetName + "+" + addressStreetCity + addressStreetState).get();
+
+            if (address!= null){
+                barberObject.put("barberAddress", new ParseGeoPoint(address.latitude,address.longitude));
+                barberObject.put("barberAboutText", barberAboutYouEditText.getText().toString());
+                barberObject.put("barberPlaceName",barberPlaceNameEditText.getText().toString());
+
+                //Get image drawable from profileImageview
+                BitmapDrawable profileImageBitMapdrawable = ((BitmapDrawable)barberProfileImage.getDrawable());
+                // Create the ParseFile
+                ParseFile profileImageFile = new ParseFile("profileImage.png", getImageViewByteArray(profileImageBitMapdrawable));
+                // Upload the image into Parse Cloud
+                profileImageFile.saveInBackground();
+                // Create a column named "ImageFile" and insert the image
+                currentUserImageObject.put("ProfileImageFile", profileImageFile);
+                //Get list of ParseFiles
+
+                barberWorkImagesFileList.remove(null);
+                currentUserImageObject.put("ImagesFileList",barberWorkImagesFileList);
+
+                // Create the class and the columns
+                currentUserImageObject.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e==null){
+                            Log.i("barberLoadingCheck", "All the barbers data was succcesfully update");
+                        }
+                        else{
+                            Log.i("barLoadingCheck", "There was an error: " + e.getMessage());
+                        }
+                    }
+                });
+
+                // Show a simple toast message
+                Toast.makeText(getApplicationContext(), "Images Uploaded",
+                        Toast.LENGTH_SHORT).show();
+
+                barberObject.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null){
+                            Log.i("BarberProfileTest", "Data has been save for user " + currentUser.getUsername() );
+                            Toast.makeText(getApplicationContext(),"Profile has been update" + " " + currentUser.getUsername(),Toast.LENGTH_SHORT).show();
+                            Intent goBackToMainPageActivity = new Intent(getApplicationContext(), BarberMainActivity.class);
+                            startActivity(goBackToMainPageActivity);
+                        }else{
+                            Log.i("BarberProfileTest", "Data was not able to save " + e.getMessage() );
+
+                        }
+                    }
+                });
+
+
+
+            }
+            else {
+                Toast.makeText(getApplicationContext(),"Address returned null", Toast.LENGTH_LONG).show();
+            }
+            //End of Null Address check
+        } //End of Try catch
+        catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -1,7 +1,9 @@
 package com.parse.starter;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -21,11 +23,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -36,11 +40,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogOutCallback;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.parse.starter.findabarberapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,17 +65,27 @@ public class UserMapsActivity extends AppCompatActivity implements OnMapReadyCal
    private float x1,x2;
    private float y1, y2;
 
+     ParseObject barberObject;
+     List<String> barberMessagesUserNamesList;
+     ParseUser currentUser;
+    List<ParseObject> barberMessagesObjectsList;
+     List<MessagesDataModel> barberMessagesInfoObjectList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_maps);
         Toolbar actionToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        actionToolbar.setTitle("Welcome");
         setSupportActionBar(actionToolbar);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         barbersListView = (ListView) findViewById(R.id.barbersListView);
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         provider = mLocationManager.getBestProvider(new Criteria(), false);
@@ -119,6 +136,12 @@ public class UserMapsActivity extends AppCompatActivity implements OnMapReadyCal
   });
 
 
+         barberMessagesObjectsList = new ArrayList<ParseObject>();
+        barberMessagesInfoObjectList = new ArrayList<MessagesDataModel>();
+
+        currentUser = ParseUser.getCurrentUser();
+
+        getUserMessages();
 
     }
 
@@ -147,9 +170,11 @@ public class UserMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main,menu);
+        getMenuInflater().inflate(R.menu.message_menu,menu);
         return true;
     }
+
+
     public  void logOut(){
         ParseUser.logOutInBackground(new LogOutCallback() {
             @Override
@@ -174,8 +199,176 @@ public class UserMapsActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int menuItemId = item.getItemId();
+
         if (menuItemId == R.id.logOut_action){
             logOut();
+        }
+        else if (menuItemId == R.id.check_messages_action){
+            //Create the Dialog to view the messages
+            Log.i("checkMessagesCheck","Check messages icon has been pressed");
+            AlertDialog.Builder viewMessagesBuilder = new AlertDialog.Builder(UserMapsActivity.this);
+            viewMessagesBuilder.setTitle("View Messages");
+
+            final MessagesListAdapter arrayAdapter = new MessagesListAdapter(
+                    UserMapsActivity.this,
+                  barberMessagesInfoObjectList,R.layout.messages_item_row_layout);
+
+
+            viewMessagesBuilder.setNegativeButton(
+                    "close",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+//           /*
+//              Send Current Barber Profile a New Message Code
+//          */
+//
+//            viewMessagesBuilder.setPositiveButton("New Message", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    //                                            //Create Alter view fro replying to message
+//                    AlertDialog.Builder builderInnerInnerSendMessage = new AlertDialog.Builder(UserMapsActivity.this);
+//                    //Add senders userNames
+//                    builderInnerInnerSendMessage.setTitle("Send Message to:" + barberObject.getString("barberUserName"));
+//                    final EditText replyMessageEditText = new EditText(UserMapsActivity.this);
+//                    builderInnerInnerSendMessage.setView(replyMessageEditText);
+//                    builderInnerInnerSendMessage.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            //Get the message from EditText
+//                            String replyMessage = replyMessageEditText.getText().toString();
+//                            Log.i("gotMessageTest", "This is the message form editText: " + replyMessage);
+//                            //Create the Message Object
+//                            ParseObject newMessageObject = new ParseObject("Messages");
+//                            //Set the Acl for the object
+//                            ParseACL defaultAcl = new ParseACL();
+//                            defaultAcl.setPublicWriteAccess(true);
+//                            defaultAcl.setPublicReadAccess(true);
+//                            newMessageObject.setACL(defaultAcl);
+//                            //Store the senders data as the current user since we are sending the message
+//                            newMessageObject.put("senderUserId",currentUser.getObjectId());
+//                            newMessageObject.put("senderUserName",currentUser.getUsername());
+//                            //Should be the barber we want to send message to
+//                            newMessageObject.put("receiverUserId",barberObject.getString("barberUserId"));
+//                            newMessageObject.put("receiverUserName",barberObject.getString("barberUserName"));
+//                            newMessageObject.put("messageContent",replyMessage);
+//                            newMessageObject.put("messageReadOrUnread",false);
+//                            newMessageObject.saveInBackground(new SaveCallback() {
+//                                @Override
+//                                public void done(ParseException e) {
+//                                    if(e== null){
+//                                        Log.i("messageReplySent","Message was saved succesfully");
+//                                        Toast.makeText(getApplicationContext(),"Message was sent to: " + barberObject.getString("barberUserName"),Toast.LENGTH_SHORT).show();
+//                                    }
+//                                    else{
+//                                        Log.i("messageReplySent","Error saving message"+ e.getMessage());
+//                                        Toast.makeText(getApplicationContext(),"Message was not able to send to: " + barberObject.getString("barberUserName")+"\n" +"error is "+ e.getMessage(),Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                }
+//                            });//End of save in background call back
+//
+//                        }
+//                    });
+//                    builderInnerInnerSendMessage.show();
+//                }
+//            });
+
+            viewMessagesBuilder.setAdapter(
+                    arrayAdapter,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Create another dialog to display the received message
+                            AlertDialog.Builder builderInnerMessageView = new AlertDialog.Builder(
+                                    UserMapsActivity.this);
+                            //Update db messageReadorUnread that message has been read
+                            barberMessagesObjectsList.get(which).put("messageReadOrUnread", true);
+                            barberMessagesObjectsList.get(which).saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if(e==null){
+                                        Log.i("messageReadUpdate", "Updated the database that message is read");
+                                    }
+                                    else{
+                                        Log.e("messageReadUpdate", "ERROR:" + e.toString());
+                                    }
+                                }
+                            });
+                            //Set view messages users name from who we got message from
+                            builderInnerMessageView.setTitle("Your message from: "+ barberMessagesInfoObjectList.get(which).getMessageSenderUserName());
+                            //Display the contents of the message from database
+                            builderInnerMessageView.setMessage(barberMessagesObjectsList.get(which).getString("messageContent"));
+                            //Set button listeners for InnerMessage view
+                            builderInnerMessageView.setPositiveButton(
+                                    "Reply",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Log.i("messageClicked","position: "+ which);
+                                            //Create Alter view fro replying to message
+                                            AlertDialog.Builder builderInnerInnerReplyMessage = new AlertDialog.Builder(UserMapsActivity.this);
+                                            //Add senders userName
+                                            builderInnerInnerReplyMessage.setTitle("Reply to: " + barberMessagesInfoObjectList.get(which + 1).getMessageSenderUserName());
+                                            final EditText replyMessageEditText = new EditText(UserMapsActivity.this);
+                                            builderInnerInnerReplyMessage.setView(replyMessageEditText);
+
+                                            builderInnerInnerReplyMessage.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+
+
+                                            builderInnerInnerReplyMessage.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, final int which) {
+                                                    //Create the Message Object
+                                                    //Get the message from EditText
+                                                    String replyMessage = replyMessageEditText.getText().toString();
+                                                    ParseObject newMessageObject = new ParseObject("Messages");
+                                                   //Send userId to database as source of message
+                                                    newMessageObject.put("senderUserId",currentUser.getObjectId());
+                                                    //Send receiverBarberId
+                                                    newMessageObject.put("receiverUserId",barberMessagesObjectsList.get(which +1).getString("senderUserId"));
+                                                    newMessageObject.put("senderUserName",currentUser.getUsername());
+                                                    //Should be the users userID
+                                                    newMessageObject.put("receiverUserName",barberMessagesObjectsList.get(which +1).getString("senderUserName"));
+                                                    newMessageObject.put("messageContent",replyMessage);
+                                                    newMessageObject.put("messageReadOrUnread", false);
+                                                    newMessageObject.saveInBackground(new SaveCallback() {
+                                                        @Override
+                                                        public void done(ParseException e) {
+                                                            if(e== null){
+                                                                Log.i("messageReplySent","Message was saved succesfully");
+                                                                Toast.makeText(getApplicationContext(),"Message was sent to: " + barberMessagesObjectsList.get(which + 1).getString("senderUserId"),Toast.LENGTH_SHORT).show();
+                                                            }
+                                                            else{
+                                                                Log.i("messageReplySent","Error saving message"+ e.getMessage());
+                                                                Toast.makeText(getApplicationContext(),"Message was not able to send to: " + barberMessagesObjectsList.get(which + 1).getString("senderUserId")+"\n" +"error is "+ e.getMessage(),Toast.LENGTH_SHORT).show();
+
+                                                            }
+                                                        }
+                                                    });
+
+                                                    Log.i("gotMessageTest", "This is the message form editText: " + replyMessage);
+
+                                                    //Let user know mesage was sent
+                                                    //close dialog
+                                                }
+                                            });
+                                            builderInnerInnerReplyMessage.show();
+                                        }
+                                    });
+                            builderInnerMessageView.show();
+                        }
+                    });
+            viewMessagesBuilder.show();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -192,6 +385,7 @@ public class UserMapsActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
         if (userLastLocation!= null){
             Log.i("UsersLastLocationTest","User's last location is " + userLastLocation.getLatitude() +" " +userLastLocation.getLongitude());
             // Add a marker in curr location and move camera
@@ -330,6 +524,54 @@ public class UserMapsActivity extends AppCompatActivity implements OnMapReadyCal
             }
         }
         return false;
+    }
+
+    public void getUserMessages(){
+        //Query the messages database
+        ParseQuery<ParseObject> userMessagesQuery = ParseQuery.getQuery("Messages");
+        userMessagesQuery.whereEqualTo("receiverUserId", currentUser.getObjectId());
+        userMessagesQuery.orderByDescending("createdAt");
+        userMessagesQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(e==null ){
+                    if (objects.size()>0) {
+                        for (ParseObject messages : objects) {
+                            //Message content
+                            String messageContent = messages.getString("messageContent");
+                            //Store the date it was created
+
+                            //Store the sendersUserName
+                            String messageSenderUserName = messages.getString("senderUserName");
+
+                            //Store the receiversUserName
+                            String messageReceiverUserName = messages.getString("receiverUserName");
+
+                            //Message read or not read
+                            boolean messageReadStatus = messages.getBoolean("messageReadOrUnread");
+
+                            //Message ReceiverObjectId
+                            String getMessageReceiverUserId = messages.getString("receiverUserId");
+
+
+                            //Create the message data model to store all possible message data
+                            MessagesDataModel messageModel = new MessagesDataModel(messageContent, messageSenderUserName, messageReceiverUserName, messageReadStatus, getMessageReceiverUserId);
+
+                            barberMessagesInfoObjectList.add(messageModel);
+                            //Add the messages for currentUser to list
+                            barberMessagesObjectsList.add(messages);
+
+                            Toast.makeText(getApplicationContext(), "Got Messages from " + messageSenderUserName + " to " + messageReceiverUserName, Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"Error Getting Messages Error Code : " + e.toString(),Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
     }
 
 }

@@ -40,6 +40,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.starter.findabarberapp.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +61,7 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
     private ExploreBarberWorkImagesAdapter adapter;
 
     //List to store barberMessagesReceivedIds
-    List<String> barberMessagesUserNamesList;
+    List<MessagesDataModel> barberMessagesInfoObjectList;
 
     //BarberObject for his/her info
     ParseObject barberObject;
@@ -73,6 +74,12 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
     private float x2;
     private float y2;
     private Bundle barberUserIdBundle;
+    private ParseObject barber;
+    private ParseObject barberFollowerObject;
+    private String barberUserId;
+    private String currentUserId;
+    private MessagesListAdapter arrayAdapter;
+    private Location userLastLocation;
 
 
     @Override
@@ -83,9 +90,13 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
 
         //Set up Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        toolbar.setTitle("Welcome Barber");
         setSupportActionBar(toolbar);
-
+        //Get the barber user for the barber Main activity
         currentUser = ParseUser.getCurrentUser();
+
+        currentUserId= currentUser.getObjectId();
+
 
         //Query the barberObject
         ParseQuery<ParseObject> currentBarberQuery = ParseQuery.getQuery("Barbers");
@@ -98,6 +109,11 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
 
                     barberUserIdBundle = new Bundle();
                     barberUserIdBundle.putString("barberObjectId", barberObject.getObjectId());
+                    barberUserId = object.getString("barberUserId");
+                    Log.i("barberMessages","Got the barber object to check for its messages");
+                }
+                else{
+                    Log.e("barberMessagesError", "Was not able to get the current users barber profile error is = " + e.toString());
                 }
             }
         });
@@ -105,13 +121,13 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
 
         //List for messages
         barberMessagesObjectsList =new ArrayList<ParseObject>();
-        barberMessagesUserNamesList = new ArrayList<String>();
+        barberMessagesInfoObjectList = new ArrayList<MessagesDataModel>();
 
 
 
         //Start getting location updates
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(BarberMainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(BarberMainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -120,20 +136,28 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             Log.i("Permissions Test", "Permissions are not set");
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},32);
+            ActivityCompat.requestPermissions(BarberMainActivity.this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},32);
 
         }
-        LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        String provider = mLocationManager.getBestProvider(new Criteria(), false);
+        else{
+            LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            String provider = mLocationManager.getBestProvider(new Criteria(), false);
 
-        //Get the last know users location from Device
-        Location userLastLocation = mLocationManager.getLastKnownLocation(provider);
-        //When device does not know last location, request location
-        if (userLastLocation == null) {
-            mLocationManager.requestLocationUpdates(provider, 400, 1, this);
-            //Get the last know users location
-            userLastLocation = mLocationManager.getLastKnownLocation(provider);
+            //Get the last know users location from Device
+             userLastLocation = mLocationManager.getLastKnownLocation(provider);
+            //When device does not know last location, request location
+            if (userLastLocation == null) {
+                mLocationManager.requestLocationUpdates(provider, 400, 1, this);
+                //Get the last know users location
+                userLastLocation = mLocationManager.getLastKnownLocation(provider);
+            }
+            else{
+                getExploreBarberImages(userLastLocation);
+            }
+
         }
+
+
 
 
         RecyclerView recyclerView = (RecyclerView)
@@ -234,9 +258,8 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
 
 
         //Call method to get all the images for this explore barber work images activity in backgroud
-        getExploreBarberImages(userLastLocation);
 
-
+        getBarberFollewersFromDB();
 
 
     }
@@ -257,13 +280,12 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
         else if (itemId == R.id.check_messages_action) {
             //Create the Dialog to view the messages
             Log.i("checkMessagesCheck","Check messages icon has been pressed");
+
+
             AlertDialog.Builder viewMessagesBuilder = new AlertDialog.Builder(BarberMainActivity.this);
             viewMessagesBuilder.setTitle("View Messages");
 
-            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                    BarberMainActivity.this,
-                    android.R.layout.select_dialog_singlechoice,barberMessagesUserNamesList);
-
+             arrayAdapter = new MessagesListAdapter(BarberMainActivity.this, barberMessagesInfoObjectList, R.layout.messages_item_row_layout);
 
             viewMessagesBuilder.setNegativeButton(
                     "cancel",
@@ -277,69 +299,88 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
 //              Send Current Barber Profile a New Message Code
 //          */
 
-            viewMessagesBuilder.setPositiveButton("New Message", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //                                            //Create Alter view fro replying to message
-                    AlertDialog.Builder builderInnerInnerSendMessage = new AlertDialog.Builder(BarberMainActivity.this);
-                    //Add senders userNames
-                    builderInnerInnerSendMessage.setTitle("Send Message to:" + barberObject.getString("barberUserName"));
-                    final EditText replyMessageEditText = new EditText(BarberMainActivity.this);
-                    builderInnerInnerSendMessage.setView(replyMessageEditText);
-                    builderInnerInnerSendMessage.setPositiveButton("Send", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //Get the message from EditText
-                            String replyMessage = replyMessageEditText.getText().toString();
-                            Log.i("gotMessageTest", "This is the message form editText: " + replyMessage);
-                            //Create the Message Object
-                            ParseObject newMessageObject = new ParseObject("Messages");
-                            //Set the Acl for the object
-                            ParseACL defaultAcl = new ParseACL();
-                            defaultAcl.setPublicWriteAccess(true);
-                            defaultAcl.setPublicReadAccess(true);
-                            newMessageObject.setACL(defaultAcl);
-                            //Store the senders data as the current user since we are sending the message
-                            newMessageObject.put("senderUserId",currentUser.getObjectId());
-                            newMessageObject.put("senderUserName",currentUser.getUsername());
-                            //Should be the barber we want to send message to
-                            newMessageObject.put("receiverUserId",barberObject.getString("barberUserId"));
-                            newMessageObject.put("receiverUserName",barberObject.getString("barberUserName"));
-                            newMessageObject.put("messageContent",replyMessage);
-                            newMessageObject.put("messageReadOrUnread",false);
+//            viewMessagesBuilder.setPositiveButton("New Message", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    //                                            //Create Alter view fro replying to message
+//                    AlertDialog.Builder builderInnerInnerSendMessage = new AlertDialog.Builder(BarberMainActivity.this);
+//                    //Add senders userNames
+//                    builderInnerInnerSendMessage.setTitle("Send Message to:" + barberObject.getString("barberUserName"));
+//                    final EditText replyMessageEditText = new EditText(BarberMainActivity.this);
+//                    builderInnerInnerSendMessage.setView(replyMessageEditText);
+//                    builderInnerInnerSendMessage.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            //Get the message from EditText
+//                            String replyMessage = replyMessageEditText.getText().toString();
+//                            Log.i("gotMessageTest", "This is the message form editText: " + replyMessage);
+//                            //Create the Message Object
+//                            ParseObject newMessageObject = new ParseObject("Messages");
+//                            //Set the Acl for the object
+//                            ParseACL defaultAcl = new ParseACL();
+//                            defaultAcl.setPublicWriteAccess(true);
+//                            defaultAcl.setPublicReadAccess(true);
+//                            newMessageObject.setACL(defaultAcl);
+//                            //Store the senders data as the current user since we are sending the message
+//                            newMessageObject.put("senderUserId",currentUser.getObjectId());
+//                            newMessageObject.put("senderUserName",currentUser.getUsername());
+//                            //Should be the barber we want to send message to
+//                            newMessageObject.put("receiverUserId",barberObject.getString("barberUserId"));
+//                            newMessageObject.put("receiverUserName",barberObject.getString("barberUserName"));
+//                            newMessageObject.put("messageContent",replyMessage);
+//                            newMessageObject.put("messageReadOrUnread",false);
+//
+//                            newMessageObject.saveInBackground(new SaveCallback() {
+//                                @Override
+//                                public void done(ParseException e) {
+//                                    if(e== null){
+//                                        Log.i("messageReplySent","Message was saved succesfully");
+//                                        Toast.makeText(getApplicationContext(),"Message was sent to: " + barberObject.getString("barberUserName"),Toast.LENGTH_SHORT).show();
+//                                    }
+//                                    else{
+//                                        Log.i("messageReplySent","Error saving message"+ e.getMessage());
+//                                        Toast.makeText(getApplicationContext(),"Message was not able to send to: " + barberObject.getString("barberUserName")+"\n" +"error is "+ e.getMessage(),Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                }
+//                            });
+//
+//                        }
+//                    });
+//                    builderInnerInnerSendMessage.show();
+//                }
+//            });
 
-                            newMessageObject.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if(e== null){
-                                        Log.i("messageReplySent","Message was saved succesfully");
-                                        Toast.makeText(getApplicationContext(),"Message was sent to: " + barberObject.getString("barberUserName"),Toast.LENGTH_SHORT).show();
-                                    }
-                                    else{
-                                        Log.i("messageReplySent","Error saving message"+ e.getMessage());
-                                        Toast.makeText(getApplicationContext(),"Message was not able to send to: " + barberObject.getString("barberUserName")+"\n" +"error is "+ e.getMessage(),Toast.LENGTH_SHORT).show();
-
-                                    }
-                                }
-                            });
-
-                        }
-                    });
-                    builderInnerInnerSendMessage.show();
-                }
-            });
-
-            viewMessagesBuilder.setAdapter(
-                    arrayAdapter,
-                    new DialogInterface.OnClickListener() {
+            viewMessagesBuilder.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             AlertDialog.Builder builderInnerMessageView = new AlertDialog.Builder(
                                     BarberMainActivity.this);
-                            //Update that message has been read
+                            //Update that message Parse object has been read
                             barberMessagesObjectsList.get(which).put("messageReadOrUnread", true);
-                            builderInnerMessageView.setTitle("Your message from: "+ barberMessagesUserNamesList.get(which));
+                            barberMessagesObjectsList.get(which).saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if(e==null){
+                                        Log.i("messageReadUpdate", "Succesfully updated the database that message is read");
+                                    }
+                                    else{
+                                        Log.e("messageReadUpdate", "Message status was NOT " + e.toString());
+
+                                    }
+                                }
+                            });
+                            builderInnerMessageView.setTitle("Your message from: "+ barberMessagesInfoObjectList.get(which ).getMessageSenderUserName());
                             builderInnerMessageView.setMessage(barberMessagesObjectsList.get(which).getString("messageContent"));
+
+
+                            builderInnerMessageView.setNegativeButton(R.string.negative_button_text, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+
                             builderInnerMessageView.setPositiveButton(
                                     "Reply",
                                     new DialogInterface.OnClickListener() {
@@ -349,9 +390,17 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
                                             //Create Alter view fro replying to message
                                             AlertDialog.Builder builderInnerInnerReplyMessage = new AlertDialog.Builder(BarberMainActivity.this);
                                             //Add senders userName
-                                            builderInnerInnerReplyMessage.setTitle("Reply to: " + barberMessagesUserNamesList.get(which + 1));
+                                            builderInnerInnerReplyMessage.setTitle("Reply to: " + barberMessagesInfoObjectList.get(which + 1).getMessageSenderUserName());
                                             final EditText replyMessageEditText = new EditText(BarberMainActivity.this);
                                             builderInnerInnerReplyMessage.setView(replyMessageEditText);
+
+                                            builderInnerInnerReplyMessage.setNegativeButton(R.string.negative_button_text, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+
                                             builderInnerInnerReplyMessage.setPositiveButton("Send", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, final int which) {
@@ -365,17 +414,17 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
                                                     //Should be the users userID
                                                     newMessageObject.put("receiverUserName",barberMessagesObjectsList.get(which +1).getString("senderUserName"));
                                                     newMessageObject.put("messageContent",replyMessage);
-
+                                                    newMessageObject.put("messageReadOrUnread",false);
                                                     newMessageObject.saveInBackground(new SaveCallback() {
                                                         @Override
                                                         public void done(ParseException e) {
                                                             if(e== null){
                                                                 Log.i("messageReplySent","Message was saved succesfully");
-                                                                Toast.makeText(getApplicationContext(),"Message was sent to: " + barberMessagesObjectsList.get(which + 1).getString("senderUserId"),Toast.LENGTH_SHORT);
+                                                                Toast.makeText(getApplicationContext(),"Message was sent to: " + barberMessagesObjectsList.get(which + 1).getString("senderUserId"),Toast.LENGTH_SHORT).show();
                                                             }
                                                             else{
                                                                 Log.i("messageReplySent","Error saving message"+ e.getMessage());
-                                                                Toast.makeText(getApplicationContext(),"Message was not able to send to: " + barberMessagesObjectsList.get(which + 1).getString("senderUserId")+"\n" +"error is "+ e.getMessage(),Toast.LENGTH_SHORT);
+                                                                Toast.makeText(getApplicationContext(),"Message was not able to send to: " + barberMessagesObjectsList.get(which + 1).getString("senderUserId")+"\n" +"error is "+ e.getMessage(),Toast.LENGTH_SHORT).show();
 
                                                             }
                                                         }
@@ -449,44 +498,49 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
                         nearbyBarberObjectsList = objects;
                         Log.i("nearbyBarberImagesTest", "Got Barber Objects : " + nearbyBarberObjectsList.size());
                         for (ParseObject barbers : nearbyBarberObjectsList ) {
+                            barber = barbers;
                             nearestBarberImagesQuery = ParseQuery.getQuery("Images");
-                            nearestBarberImagesQuery.whereEqualTo("UserObjectId",barbers.get("barberUserId"));
+                            nearestBarberImagesQuery.whereEqualTo("UserObjectId", barbers.get("barberUserId"));
                             nearestBarberImagesQuery.getFirstInBackground(new GetCallback<ParseObject>() {
                                 @Override
                                 public void done(ParseObject object, ParseException e) {
-                                    if (e == null) {
+                                    if (e == null ) {
                                         //get image list for current barber
                                         currentBarberImageList = object.getList("ImagesFileList");
-                                        //iterate through all images from current barber into ExploreBarberImageList
-                                        if (currentBarberImageList != null && currentBarberImageList.size() > 0) {
-                                            Log.i("nearbyBarberImagesTest", "Got Barber Images : " + currentBarberImageList.size());
-                                            for (ParseFile workImage : currentBarberImageList) {
-                                                byte[] barberWorkImageByteArray;
-                                                if (workImage != null) {
-                                                    try {
-                                                        barberWorkImageByteArray = workImage.getData();
-                                                        ExploreBarbersImagesDataModel model = new ExploreBarbersImagesDataModel(object.getString("UserObjectId"), BitmapFactory.decodeByteArray(barberWorkImageByteArray, 0, barberWorkImageByteArray.length));
-                                                        exploreBarberImagesRandomList.add(model);
-                                                        //All Nearest Barbers Images should be in exploreBarberImagesRandomList
-                                                        Log.i("nearbyBarberImagesTest", "BarberWorkImagesAdapter size : " + exploreBarberImagesRandomList.size());
-                                                        Collections.shuffle(exploreBarberImagesRandomList);
-                                                        adapter.notifyDataSetChanged();// Notify the adapter\
-                                                    } catch (ParseException e1) {
-                                                        e1.printStackTrace();
+                                        if (currentBarberImageList.size() > 0) {
+                                            //iterate through all images from current barber into ExploreBarberImageList
+                                            if (currentBarberImageList.get(0) != null) {
+                                                Log.i("nearbyBarberImagesTest", "Got Barber Images : " + currentBarberImageList.size());
+                                                for (int i = 0; i < currentBarberImageList.size() ; i++) {
+                                                    if (currentBarberImageList.get(i) != null) {
+
+                                                        ParseFile workImage =  currentBarberImageList.get(i);
+                                                        byte[] barberWorkImageByteArray;
+                                                        if (workImage != null) {
+                                                            try {
+                                                                barberWorkImageByteArray = workImage.getData();
+                                                                ExploreBarbersImagesDataModel model = new ExploreBarbersImagesDataModel(barber.getObjectId(), BitmapFactory.decodeByteArray(barberWorkImageByteArray, 0, barberWorkImageByteArray.length));
+                                                                exploreBarberImagesRandomList.add(model);
+                                                                //All Nearest Barbers Images should be in exploreBarberImagesRandomList
+                                                                Log.i("nearbyBarberImagesTest", "BarberWorkImagesAdapter size : " + exploreBarberImagesRandomList.size());
+                                                                Collections.shuffle(exploreBarberImagesRandomList);
+                                                                adapter.notifyDataSetChanged();// Notify the adapter\
+                                                            } catch (ParseException e1) {
+                                                                e1.printStackTrace();
+                                                            }
+                                                        }
+
                                                     }
                                                 }
-
                                             }
-
                                         }
                                         //Condition when currentBarberImageList
                                         else{
                                             Log.i("nearbyBarberImagesTest", "Barber has no images in his list : "  );
-
                                         }
                                     }
                                     else{
-                                        Log.i("foundNearbyTest", "Zero Image Objests from query");
+                                        Log.i("foundNearbyTest", "Zero Image Objests from query" + e.toString());
                                     }
                                 }
                             });
@@ -578,6 +632,71 @@ public class BarberMainActivity extends AppCompatActivity implements LocationLis
             }
         }
         return false;
+    }
+    private void getBarberFollewersFromDB(){
+        ParseQuery<ParseObject> barberFollowersQuery = ParseQuery.getQuery("Followers");
+        barberFollowersQuery.whereEqualTo("followerUserId",currentUserId);
+        barberFollowersQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if(e == null){
+                    Log.i("FollowersQuery", "Followers Query was successful");
+                    //Store barberFollower Object
+                    barberFollowerObject = object;
+                    //Query the messages objects for messages for currentUserID
+                    final ParseQuery<ParseObject> currentUserMessagesQuery = new ParseQuery<ParseObject>("Messages");
+                    currentUserMessagesQuery.whereEqualTo("receiverUserId", currentUserId);
+                    currentUserMessagesQuery.orderByDescending("createdAt");
+                    currentUserMessagesQuery.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> objects, ParseException e) {
+                            if (e==null){
+                                if (objects.size()>0){
+                                    Log.i("currentUserMessages","Messages Query was succesful");
+                                    for (ParseObject message: objects)
+                                    {
+                                       //
+                                        //Message content
+                                        String messageContent= message.getString("messageContent") ;
+                                        //Store the date it was created
+
+                                        //Store the sendersUserName
+                                        String messageSenderUserName = message.getString("senderUserName");
+
+                                        //Store the receiversUserName
+                                        String messageReceiverUserName = message.getString("receiverUserName");
+
+                                        //Message read or not read
+                                        boolean messageReadStatus = message.getBoolean("messageReadOrUnread");
+
+                                        //Message ReceiverObjectId
+                                        String getMessageReceiverUserId = message.getString("receiverUserId");
+
+
+                                        //Create the message data model to store all possible message data
+                                        MessagesDataModel messageModel = new MessagesDataModel(messageContent,messageSenderUserName,messageReceiverUserName,messageReadStatus,getMessageReceiverUserId);
+
+                                        barberMessagesInfoObjectList.add(messageModel);
+                                        //Add the messages for currentUser to list
+                                        barberMessagesObjectsList.add(message);
+                                        //Add the messages sender userId to list
+
+
+
+                                    }
+                                }
+                            }
+                            else{
+                                Log.i("currentUserMessages","Error getting messages for: " + currentUserId +  " error is " + e.getMessage());
+                            }
+                        }
+                    });
+                }
+                else{
+                    Log.i("FollowersQuery","Error getting query " + e.getMessage());
+                }
+            }
+        });
     }
 }
 

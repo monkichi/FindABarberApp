@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.parse.starter.findabarberapp.R;
+
 import java.util.ArrayList;
 
 /**
