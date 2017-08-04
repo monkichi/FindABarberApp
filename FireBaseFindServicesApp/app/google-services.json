@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "468720877309",
+    "firebase_url": "https://lonzobbb-ada10.firebaseio.com",
+    "project_id": "lonzobbb-ada10",
+    "storage_bucket": "lonzobbb-ada10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468720877309:android:a75c1e04223f042d",
+        "android_client_info": {
+          "package_name": "com.example.chris.firebasefindservices"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "468720877309-uuo1ahm246vp8fnh8fs7avbeomtbfi2u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chris.firebasefindservices",
+            "certificate_hash": "09b7ab7f991bfd0486a2b20889ea34f2a945cae2"
+          }
+        },
+        {
+          "client_id": "468720877309-15g2keqvj6cot5r8s66db70era4s8nh0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxfQWqpdNFuvytaQ0kJ74oebRsK2_heL0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "468720877309-15g2keqvj6cot5r8s66db70era4s8nh0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
