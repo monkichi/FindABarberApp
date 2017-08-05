@@ -1,8 +1,13 @@
 package com.example.chris.firebasefindservices;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -12,11 +17,22 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    //Log In Ui Widget Variable Declaration
+    EditText userEmailAddressEditText;
+    EditText userPasswordEditText;
+    Button userSignInButton;
+    TextView userSignUpTextView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Inflate UI variables to access widgets
+        inflateUi();
 
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -45,4 +61,29 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
+    public void inflateUi(){
+        userEmailAddressEditText = (EditText) findViewById(R.id.userNameEmailAddressEditText);
+        userPasswordEditText = (EditText) findViewById(R.id.userPasswordEditText);
+        userSignInButton = (Button) findViewById(R.id.signInButton);
+        userSignUpTextView = (TextView) findViewById(R.id.signUpClickableTextView);
+
+        signUpLogic();
+    }
+
+    public void signInWithEmail(){
+
+    }
+
+    public void signUpLogic(){
+        userSignUpTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent signUpIntent = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivity(signUpIntent);
+            }
+        });
+    }
+
 }
