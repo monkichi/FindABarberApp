@@ -15,8 +15,8 @@
         android:layout_alignStart="@+id/userPasswordEditText"
         android:layout_marginBottom="12dp"
         android:ems="10"
+        android:hint="Enter Email Address"
         android:inputType="textEmailAddress"
-        android:text="Enter Email Address"
         tools:layout_editor_absoluteX="84dp"
         tools:layout_editor_absoluteY="161dp" />
 
@@ -28,6 +28,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="65dp"
         android:ems="10"
+        android:hint="Enter Password"
         android:inputType="textPassword"
         tools:layout_editor_absoluteX="84dp"
         tools:layout_editor_absoluteY="233dp" />
